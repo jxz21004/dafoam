@@ -76,3 +76,7 @@ separates reconstruction changes from the AUSM/LF operator mismatch.
 [First-order convergence and second-order continuation](orderStartup/README.md)
 records a first-order outer-tolerance success and the subsequent second-order
 stagnation, with a direct second-order control.
+
+[Adjoint gradients at the residual plateau](gradientAtPlateau/README.md) compare
+alpha sensitivities against central differences with a 1e-4-degree step,
+including independent adjoint residual checks and finite-iteration FD drift.
