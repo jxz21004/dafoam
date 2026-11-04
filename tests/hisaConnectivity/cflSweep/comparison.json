@@ -1,0 +1,117 @@
+{
+  "scope": "Fixed-CFL diagnostic from identical stalled L3 state; not an ANK implementation. Timing is a single serial run per setting, not a statistical benchmark.",
+  "sweep": [
+    {
+      "cfl": 5.0,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 80068.82454457933,
+      "residual_ratio": 0.18240677939780509,
+      "seconds": 11.577901248999297,
+      "krylov_steps": 1501,
+      "decades_per_second": 0.06382495485718737,
+      "actual_cfl_range": [
+        5.0,
+        5.0
+      ]
+    },
+    {
+      "cfl": 10.0,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 238265.15622173733,
+      "residual_ratio": 0.5427977747434577,
+      "seconds": 11.620456898000157,
+      "krylov_steps": 1505,
+      "decades_per_second": 0.022835757989017214,
+      "actual_cfl_range": [
+        10.0,
+        10.0
+      ]
+    },
+    {
+      "cfl": 20.0,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 356642.29474164575,
+      "residual_ratio": 0.8124756764056994,
+      "seconds": 13.095507734000421,
+      "krylov_steps": 2498,
+      "decades_per_second": 0.00688706644545071,
+      "actual_cfl_range": [
+        20.0,
+        20.0
+      ]
+    },
+    {
+      "cfl": 58,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 440775.57092020434,
+      "residual_ratio": 1.0041417840974964,
+      "seconds": 16.190008347999537,
+      "krylov_steps": 3500,
+      "decades_per_second": -0.000110873272486144,
+      "actual_cfl_range": [
+        58.0,
+        58.0
+      ]
+    },
+    {
+      "cfl": 100,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 450363.1932998276,
+      "residual_ratio": 1.0259835849519066,
+      "seconds": 15.078829591000613,
+      "krylov_steps": 3500,
+      "decades_per_second": -0.0007388114803077005,
+      "actual_cfl_range": [
+        100.0,
+        100.0
+      ]
+    },
+    {
+      "cfl": 300,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 463190.47766988043,
+      "residual_ratio": 1.0552057403122421,
+      "seconds": 14.664128618000177,
+      "krylov_steps": 3500,
+      "decades_per_second": -0.0015914443818499668,
+      "actual_cfl_range": [
+        300.0,
+        300.0
+      ]
+    },
+    {
+      "cfl": 1000,
+      "iterations": 500,
+      "residual_l2_initial": 438957.5037118538,
+      "residual_l2_final": 462477.1852877976,
+      "residual_ratio": 1.0535807712069158,
+      "seconds": 14.794506369000374,
+      "krylov_steps": 3500,
+      "decades_per_second": -0.00153217925608732,
+      "actual_cfl_range": [
+        1000.0,
+        1000.0
+      ]
+    }
+  ],
+  "continuation": {
+    "cfl": 5,
+    "additional_iterations": 1500,
+    "total_iterations": 2000,
+    "additional_seconds": 34.27657251099936,
+    "total_seconds": 45.854473759998655,
+    "residual_l2_final": 74874.82365801267,
+    "residual_ratio_over_continuation": 0.9351307963354097,
+    "residual_ratio_from_common_start": 0.1705741968752469,
+    "total_krylov_steps": 6001,
+    "last_normalized_outer": 0.0007390877431703862,
+    "last100_mean_outer": 0.000790230962524846,
+    "flow_threshold_met": false
+  }
+}
