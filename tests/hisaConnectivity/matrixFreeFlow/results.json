@@ -1,0 +1,574 @@
+{
+  "default_path_regression": {
+    "state_max_difference": 0.0,
+    "residual_max_difference": 0.0
+  },
+  "directional_checks": {
+    "scope": "First Krylov direction in each of three outer iterations, epsilon versus epsilon/2, frozen turbulence",
+    "max_relative_difference": 3.71905292149554e-08,
+    "max_zero_step_residual_drift": 9.627946778984789e-13,
+    "passed": true
+  },
+  "scope": "20-step experiments at identical state; MF includes residual-based backtracking and is NOT a fully coupled flow/SA Newton method.",
+  "results": [
+    {
+      "matrix_free": false,
+      "mf_epsilon": 1e-06,
+      "jacobian": "centralLaxFriedrichs",
+      "pc_jacobian": "centralLaxFriedrichs",
+      "bounding": false,
+      "cfl": 5.0,
+      "returncode": 0,
+      "wall_seconds_including_startup": 6.640202177000901,
+      "case": "/mdouser/test_aerostructure/dafoam_case/validation/dafoam_L3_mf_off_baseline/cfl5_0",
+      "actual_cfl_range": [
+        5.0,
+        5.0
+      ],
+      "report": {
+        "alpha": 2.0,
+        "primal_fail": 0,
+        "raw_residual_max": 1620.1951686171365,
+        "raw_residual_l2": 4428.013653408479,
+        "primal_seconds": 0.7186466439998185,
+        "cells": 3024,
+        "primal_iterations": 20,
+        "temperature_min": 185.65462175169287,
+        "temperature_max": 318.0630302240415,
+        "functions": {
+          "cd": 0.12994233272673036,
+          "cl": 0.3739041417728191
+        },
+        "loaded_libraries": {
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolverADR.so": "41da76000533923f4a09e2afcbe48d82b3190a52b08ebf66af20a687ecae005a",
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolver.so": "0484c948679d262e5282cd52274a1aad8f82506698216265bcb28ad413bd3d82"
+        },
+        "accepted": false,
+        "gradient_verified": false,
+        "initialization": "saved fields",
+        "adjoint_settings_configured_but_not_run": {
+          "gmresRestart": 100,
+          "gmresMaxIters": 2000,
+          "gmresRelTol": 1e-08,
+          "gmresAbsTol": 1e-13,
+          "pcFillLevel": 1,
+          "jacMatReOrdering": "rcm",
+          "asmOverlap": 1,
+          "hisaPCFlux": 1,
+          "hisaForceJSTFlux": 0,
+          "hisaRemoveTauMCOff": 1
+        },
+        "initial_raw_residual_l2": 3766.8210377503738,
+        "fixed_definition_relative_l2": 1.1755306687075804
+      },
+      "total_krylov_steps": 60,
+      "decades_reduction_per_primal_second": -0.09773087317708952,
+      "initial_state_max_difference": 0.0,
+      "flow_updates_accepted": 0,
+      "flow_updates_rejected": 0,
+      "residual_evaluations_in_matrix_free_path": 0,
+      "max_repeat_error": 0,
+      "line_search_history": [],
+      "cycles_at_limit": 0,
+      "linear_solves_meeting_tolerance": 20,
+      "linear_solves_not_meeting_tolerance": 0,
+      "last_max_outer_residual": 7.664473531883603e-05,
+      "flow_threshold_met": false
+    },
+    {
+      "matrix_free": true,
+      "mf_epsilon": 1e-06,
+      "jacobian": "centralLaxFriedrichs",
+      "pc_jacobian": "centralLaxFriedrichs",
+      "bounding": false,
+      "cfl": 5.0,
+      "returncode": 0,
+      "wall_seconds_including_startup": 14.162920538001345,
+      "case": "/mdouser/test_aerostructure/dafoam_case/validation/dafoam_L3_mf_compare/cfl5_0",
+      "actual_cfl_range": [
+        5.0,
+        5.0
+      ],
+      "report": {
+        "alpha": 2.0,
+        "primal_fail": 0,
+        "raw_residual_max": 1045.0967151639702,
+        "raw_residual_l2": 3284.1160369243207,
+        "primal_seconds": 8.282094869002322,
+        "cells": 3024,
+        "primal_iterations": 20,
+        "temperature_min": 185.65646950192865,
+        "temperature_max": 318.0589170068859,
+        "functions": {
+          "cd": 0.1299127431790689,
+          "cl": 0.3740015181907701
+        },
+        "loaded_libraries": {
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolverADR.so": "41da76000533923f4a09e2afcbe48d82b3190a52b08ebf66af20a687ecae005a",
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolver.so": "0484c948679d262e5282cd52274a1aad8f82506698216265bcb28ad413bd3d82"
+        },
+        "accepted": false,
+        "gradient_verified": false,
+        "initialization": "saved fields",
+        "adjoint_settings_configured_but_not_run": {
+          "gmresRestart": 100,
+          "gmresMaxIters": 2000,
+          "gmresRelTol": 1e-08,
+          "gmresAbsTol": 1e-13,
+          "pcFillLevel": 1,
+          "jacMatReOrdering": "rcm",
+          "asmOverlap": 1,
+          "hisaPCFlux": 1,
+          "hisaForceJSTFlux": 0,
+          "hisaRemoveTauMCOff": 1
+        },
+        "initial_raw_residual_l2": 3766.8210377503738,
+        "fixed_definition_relative_l2": 0.8718534817586304
+      },
+      "total_krylov_steps": 252,
+      "decades_reduction_per_primal_second": 0.007190993908049987,
+      "initial_state_max_difference": 0.0,
+      "flow_updates_accepted": 2,
+      "flow_updates_rejected": 18,
+      "residual_evaluations_in_matrix_free_path": 1770,
+      "max_repeat_error": 9.627946778984789e-13,
+      "line_search_history": [
+        {
+          "alpha": 1.0,
+          "merit_ratio": 0.8743957571464883,
+          "evaluations": 116
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9962552920426025,
+          "evaluations": 82
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 86
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 92
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 92
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 92
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 92
+        }
+      ],
+      "cycles_at_limit": 0,
+      "linear_solves_meeting_tolerance": 20,
+      "linear_solves_not_meeting_tolerance": 0,
+      "last_max_outer_residual": 6.407072803577514e-05,
+      "flow_threshold_met": false
+    },
+    {
+      "matrix_free": true,
+      "mf_epsilon": 1e-06,
+      "jacobian": "centralLaxFriedrichs",
+      "pc_jacobian": "centralLaxFriedrichs",
+      "bounding": false,
+      "cfl": 100.0,
+      "returncode": 0,
+      "wall_seconds_including_startup": 71.5881107990026,
+      "case": "/mdouser/test_aerostructure/dafoam_case/validation/dafoam_L3_mf_compare/cfl100_0",
+      "actual_cfl_range": [
+        100.0,
+        100.0
+      ],
+      "report": {
+        "alpha": 2.0,
+        "primal_fail": 0,
+        "raw_residual_max": 1333.1567179126887,
+        "raw_residual_l2": 2418.210471270845,
+        "primal_seconds": 65.53965126500043,
+        "cells": 3024,
+        "primal_iterations": 20,
+        "temperature_min": 185.6599988735079,
+        "temperature_max": 318.0659282548005,
+        "functions": {
+          "cd": 0.12993118970978157,
+          "cl": 0.3738404286177758
+        },
+        "loaded_libraries": {
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolverADR.so": "41da76000533923f4a09e2afcbe48d82b3190a52b08ebf66af20a687ecae005a",
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolver.so": "0484c948679d262e5282cd52274a1aad8f82506698216265bcb28ad413bd3d82"
+        },
+        "accepted": false,
+        "gradient_verified": false,
+        "initialization": "saved fields",
+        "adjoint_settings_configured_but_not_run": {
+          "gmresRestart": 100,
+          "gmresMaxIters": 2000,
+          "gmresRelTol": 1e-08,
+          "gmresAbsTol": 1e-13,
+          "pcFillLevel": 1,
+          "jacMatReOrdering": "rcm",
+          "asmOverlap": 1,
+          "hisaPCFlux": 1,
+          "hisaForceJSTFlux": 0,
+          "hisaRemoveTauMCOff": 1
+        },
+        "initial_raw_residual_l2": 3766.8210377503738,
+        "fixed_definition_relative_l2": 0.64197646955775
+      },
+      "total_krylov_steps": 2400,
+      "decades_reduction_per_primal_second": 0.0029368616734021143,
+      "initial_state_max_difference": 0.0,
+      "flow_updates_accepted": 11,
+      "flow_updates_rejected": 9,
+      "residual_evaluations_in_matrix_free_path": 14593,
+      "max_repeat_error": 1.2960521911503125e-12,
+      "line_search_history": [
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.7938125037000806,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.8669377690155359,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9941674465036205,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.8609323007980254,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.125,
+          "merit_ratio": 0.9801096780159112,
+          "evaluations": 725
+        },
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.8822698218201352,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9541278626861607,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.015625,
+          "merit_ratio": 0.9989799759505792,
+          "evaluations": 728
+        },
+        {
+          "alpha": 0.0078125,
+          "merit_ratio": 0.9995591362295008,
+          "evaluations": 729
+        },
+        {
+          "alpha": 0.001953125,
+          "merit_ratio": 0.9999004049405809,
+          "evaluations": 731
+        },
+        {
+          "alpha": 0.00048828125,
+          "merit_ratio": 0.9999763376155213,
+          "evaluations": 733
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        }
+      ],
+      "cycles_at_limit": 20,
+      "linear_solves_meeting_tolerance": 0,
+      "linear_solves_not_meeting_tolerance": 20,
+      "last_max_outer_residual": 4.334968224838654e-05,
+      "flow_threshold_met": false
+    },
+    {
+      "matrix_free": true,
+      "mf_epsilon": 1e-06,
+      "jacobian": "centralLaxFriedrichs",
+      "pc_jacobian": "centralLaxFriedrichs",
+      "bounding": false,
+      "cfl": 1000.0,
+      "returncode": 0,
+      "wall_seconds_including_startup": 67.02098608600136,
+      "case": "/mdouser/test_aerostructure/dafoam_case/validation/dafoam_L3_mf_compare/cfl1000_0",
+      "actual_cfl_range": [
+        1000.0,
+        1000.0
+      ],
+      "report": {
+        "alpha": 2.0,
+        "primal_fail": 0,
+        "raw_residual_max": 1630.341740387163,
+        "raw_residual_l2": 2725.410637895737,
+        "primal_seconds": 61.36847935200058,
+        "cells": 3024,
+        "primal_iterations": 20,
+        "temperature_min": 185.66397852246286,
+        "temperature_max": 318.0748734201903,
+        "functions": {
+          "cd": 0.129922019015732,
+          "cl": 0.3738384355340298
+        },
+        "loaded_libraries": {
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolverADR.so": "41da76000533923f4a09e2afcbe48d82b3190a52b08ebf66af20a687ecae005a",
+          "/mdouser/test_aerostructure/dafoam_case/validation/hisa_matrix_free/build/lib/libHisaSolver.so": "0484c948679d262e5282cd52274a1aad8f82506698216265bcb28ad413bd3d82"
+        },
+        "accepted": false,
+        "gradient_verified": false,
+        "initialization": "saved fields",
+        "adjoint_settings_configured_but_not_run": {
+          "gmresRestart": 100,
+          "gmresMaxIters": 2000,
+          "gmresRelTol": 1e-08,
+          "gmresAbsTol": 1e-13,
+          "pcFillLevel": 1,
+          "jacMatReOrdering": "rcm",
+          "asmOverlap": 1,
+          "hisaPCFlux": 1,
+          "hisaForceJSTFlux": 0,
+          "hisaRemoveTauMCOff": 1
+        },
+        "initial_raw_residual_l2": 3766.8210377503738,
+        "fixed_definition_relative_l2": 0.7235306935429592
+      },
+      "total_krylov_steps": 2400,
+      "decades_reduction_per_primal_second": 0.0022901502863252833,
+      "initial_state_max_difference": 0.0,
+      "flow_updates_accepted": 12,
+      "flow_updates_rejected": 8,
+      "residual_evaluations_in_matrix_free_path": 14565,
+      "max_repeat_error": 9.917585616487326e-13,
+      "line_search_history": [
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.7730388921806716,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.8464348114556939,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.125,
+          "merit_ratio": 0.9613216011267041,
+          "evaluations": 725
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.8920269432215943,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.5,
+          "merit_ratio": 0.9365346205688925,
+          "evaluations": 723
+        },
+        {
+          "alpha": 0.125,
+          "merit_ratio": 0.9486613996295976,
+          "evaluations": 725
+        },
+        {
+          "alpha": 0.015625,
+          "merit_ratio": 0.9983615187895764,
+          "evaluations": 728
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9712832355940927,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9961865504801742,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.25,
+          "merit_ratio": 0.9852372780930436,
+          "evaluations": 724
+        },
+        {
+          "alpha": 0.125,
+          "merit_ratio": 0.9957670733538989,
+          "evaluations": 725
+        },
+        {
+          "alpha": 0.125,
+          "merit_ratio": 0.9999804366671065,
+          "evaluations": 725
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        },
+        {
+          "alpha": 0.0,
+          "merit_ratio": 1.0,
+          "evaluations": 734
+        }
+      ],
+      "cycles_at_limit": 20,
+      "linear_solves_meeting_tolerance": 0,
+      "linear_solves_not_meeting_tolerance": 20,
+      "last_max_outer_residual": 4.56249516046995e-05,
+      "flow_threshold_met": false
+    }
+  ]
+}

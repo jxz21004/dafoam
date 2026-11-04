@@ -20,6 +20,9 @@ p.add_argument('--steps',type=int,default=500)
 p.add_argument('--jacobian',default='LaxFriedrichs')
 p.add_argument('--pc-jacobian')
 p.add_argument('--bounding',action='store_true')
+p.add_argument('--matrix-free',action='store_true')
+p.add_argument('--mf-epsilon',type=float,default=1e-6)
+p.add_argument('--mf-check',action='store_true')
 p.add_argument('--cfl',type=float,nargs='+',default=[58,100,300,1000])
 a=p.parse_args();source=a.source.resolve();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
 runner=a.hisa_repo.resolve()/'tests/wingAero/run_case.py'
@@ -47,6 +50,13 @@ for cfl in a.cfl:
  s=re.sub(r'(inviscidJacobian\s+)[^;]+;',lambda m:m[1]+a.jacobian+';',s)
  if a.pc_jacobian:
   s=s.replace('preconditioner    LUSGS;', 'preconditioner    LUSGS;\n        LUSGS { inviscidJacobian '+a.pc_jacobian+'; viscousJacobian laplacian; }')
+ for key,value in [('matrixFree',str(a.matrix_free).lower()),('matrixFreeEpsilon',str(a.mf_epsilon)),('matrixFreeCheck',str(a.mf_check).lower())]:
+  if re.search(r'(?m)^\s*'+key+r'\s+',s):
+   s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
+  elif a.matrix_free:
+   s=s.replace('GMRES\n    {','GMRES\n    {\n        '+key+' '+value+';')
+ if a.matrix_free:
+  s=re.sub(r'(maxIter\s+)[^;]+;',r'\g<1>3;',s)
  if a.bounding:
   for key,value in [('localTimesteppingBounding','true'),('localTimesteppingLowerBound','0.8'),('localTimesteppingUpperBound','1.2')]:
    s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
@@ -57,7 +67,7 @@ for cfl in a.cfl:
    proc=subprocess.run([sys.executable,str(runner),'--case',str(case),'--library-dir',str(a.hisa_lib.resolve()),'--restart'],stdout=log,stderr=subprocess.STDOUT,timeout=180)
    code=proc.returncode
   except subprocess.TimeoutExpired:code='timeout'
- row={'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
+ row={'matrix_free':a.matrix_free,'mf_epsilon':a.mf_epsilon,'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
  text=(case/'primal.log').read_text();actual=[float(v) for v in re.findall(r'Pseudo Courant No:\s*(\S+)',text)]
  row['actual_cfl_range']=[min(actual),max(actual)] if actual else None
  if code==0:
