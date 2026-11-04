@@ -1,0 +1,188 @@
+{
+  "scope": "Random block directions; not a full Jacobian or steady gradient verification",
+  "normalization": "AD product includes normalizeStates; FD perturbs x+h*scales*v",
+  "native_ad_residual_relative_difference": 1.0351465310556865e-16,
+  "native_ad_residual_max_difference": 2.6590951662797124e-12,
+  "best_by_block": [
+    {
+      "input": "U",
+      "output": "U",
+      "h": 1e-08,
+      "ad": -251256.3563395951,
+      "fd": -251256.35701799713,
+      "relative_error": 2.700039236858075e-09,
+      "fd_adr": -251256.35701877915,
+      "adr_relative_error": 2.7031516752120323e-09,
+      "best_adr_relative_error": 2.7031516752120323e-09
+    },
+    {
+      "input": "U",
+      "output": "p",
+      "h": 1e-08,
+      "ad": -174579.82924600982,
+      "fd": -174579.83162892924,
+      "relative_error": 1.3649454252022106e-08,
+      "fd_adr": -174579.83162892924,
+      "adr_relative_error": 1.3649454252022106e-08,
+      "best_adr_relative_error": 1.3649454252022106e-08
+    },
+    {
+      "input": "U",
+      "output": "T",
+      "h": 1e-08,
+      "ad": -29753.7358367992,
+      "fd": -29753.998347871748,
+      "relative_error": 8.822715840748975e-06,
+      "fd_adr": -29753.998352198483,
+      "adr_relative_error": 8.82286125640982e-06,
+      "best_adr_relative_error": 8.82286125640982e-06
+    },
+    {
+      "input": "U",
+      "output": "nuTilda",
+      "h": 1e-08,
+      "ad": -7.8364154894904345,
+      "fd": -7.836428546255036,
+      "relative_error": 1.6661626561120297e-06,
+      "fd_adr": -7.8364267874367215,
+      "adr_relative_error": 1.4417216664451782e-06,
+      "best_adr_relative_error": 1.4417216664451782e-06
+    },
+    {
+      "input": "p",
+      "output": "U",
+      "h": 1e-08,
+      "ad": 6729.15105980615,
+      "fd": 6729.194950390269,
+      "relative_error": 6.52241233043763e-06,
+      "fd_adr": 6729.1949469206465,
+      "adr_relative_error": 6.521896726470155e-06,
+      "best_adr_relative_error": 6.521896726470155e-06
+    },
+    {
+      "input": "p",
+      "output": "p",
+      "h": 1e-08,
+      "ad": 42922.00515424185,
+      "fd": 42921.96643679605,
+      "relative_error": 9.020418701754406e-07,
+      "fd_adr": 42921.96643679605,
+      "adr_relative_error": 9.020418701754406e-07,
+      "best_adr_relative_error": 9.020418701754406e-07
+    },
+    {
+      "input": "p",
+      "output": "T",
+      "h": 1e-08,
+      "ad": 167694.9692606209,
+      "fd": 167694.9445332102,
+      "relative_error": 1.4745469606618888e-07,
+      "fd_adr": 167694.94452827494,
+      "adr_relative_error": 1.4748412600655996e-07,
+      "best_adr_relative_error": 1.4748412600655996e-07
+    },
+    {
+      "input": "p",
+      "output": "nuTilda",
+      "h": 1e-08,
+      "ad": -344.11284556384123,
+      "fd": -344.1127263406873,
+      "relative_error": 3.4646528161280085e-07,
+      "fd_adr": -344.1127275816644,
+      "adr_relative_error": 3.428589730577501e-07,
+      "best_adr_relative_error": 3.428589730577501e-07
+    },
+    {
+      "input": "T",
+      "output": "U",
+      "h": 1e-08,
+      "ad": -685.3818291240207,
+      "fd": -685.3867550797644,
+      "relative_error": 7.187118378355696e-06,
+      "fd_adr": -685.3867550797644,
+      "adr_relative_error": 7.187118378355696e-06,
+      "best_adr_relative_error": 7.187118378355696e-06
+    },
+    {
+      "input": "T",
+      "output": "p",
+      "h": 3e-09,
+      "ad": -2526.304460284027,
+      "fd": -2526.3053921133323,
+      "relative_error": 3.688506181435107e-07,
+      "fd_adr": -2526.3053921133323,
+      "adr_relative_error": 3.688506181435107e-07,
+      "best_adr_relative_error": 3.688506181435107e-07
+    },
+    {
+      "input": "T",
+      "output": "T",
+      "h": 1e-10,
+      "ad": 12919.070606540845,
+      "fd": 12919.046069723086,
+      "relative_error": 1.8992711245028752e-06,
+      "fd_adr": 12919.046069723086,
+      "adr_relative_error": 1.8992711245028752e-06,
+      "best_adr_relative_error": 1.8992711245028752e-06
+    },
+    {
+      "input": "T",
+      "output": "nuTilda",
+      "h": 1e-06,
+      "ad": -280.27387476337043,
+      "fd": -280.27387359920544,
+      "relative_error": 4.153669284516559e-09,
+      "fd_adr": -280.27387366751486,
+      "adr_relative_error": 3.909945467504603e-09,
+      "best_adr_relative_error": 3.909945467504603e-09
+    },
+    {
+      "input": "nuTilda",
+      "output": "U",
+      "h": 0.0001,
+      "ad": 6.379358702530347,
+      "fd": 6.379358700009435,
+      "relative_error": 3.9516691208544803e-10,
+      "fd_adr": 6.379358700009435,
+      "adr_relative_error": 3.9516691208544803e-10,
+      "best_adr_relative_error": 3.9516691208544803e-10
+    },
+    {
+      "input": "nuTilda",
+      "output": "p",
+      "h": 0.001,
+      "ad": 0.0,
+      "fd": 0.0,
+      "relative_error": 0.0,
+      "fd_adr": 0.0,
+      "adr_relative_error": 0.0,
+      "best_adr_relative_error": 0.0
+    },
+    {
+      "input": "nuTilda",
+      "output": "T",
+      "h": 1e-05,
+      "ad": -3.6668066241474953,
+      "fd": -3.666806624602179,
+      "relative_error": 1.239999521869483e-10,
+      "fd_adr": -3.666806624602179,
+      "adr_relative_error": 1.239999521869483e-10,
+      "best_adr_relative_error": 1.239999521869483e-10
+    },
+    {
+      "input": "nuTilda",
+      "output": "nuTilda",
+      "h": 0.0001,
+      "ad": -5.675686267876467,
+      "fd": -5.675686264042451,
+      "relative_error": 6.755158038299333e-10,
+      "fd_adr": -5.675686264028798,
+      "adr_relative_error": 6.779213417725262e-10,
+      "best_adr_relative_error": 6.779213417725262e-10
+    }
+  ],
+  "loaded_libraries": {
+    "/mdouser/test_aerostructure/dafoam_case/validation/hisa_limited_fix/build/lib/libHisaSolverADR.so": "ddb21e691018bfdd89e2a0815c486f4b0ecd0b95f51f1950545e4223df873e05",
+    "/mdouser/test_aerostructure/dafoam_case/validation/hisa_limited_fix/build/lib/libHisaSolver.so": "5beefc46d1b454e53167c8a2cb5c39d737aef67074ac6b2ec02d908b228fb696"
+  }
+}

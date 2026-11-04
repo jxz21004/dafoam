@@ -107,6 +107,19 @@ DAStateInfoHisaFoam::DAStateInfoHisaFoam(
     // add physical model residual connectivity
     daModel.addModelResidualCon(stateResConInfo_);
 
+    // HiSA reconstructs the mass flux from neighbouring cell velocities.
+    // The SA convection residual therefore depends on second-ring U even
+    // though phi is not an independent HiSA state. Keep this extension here
+    // so other solvers retain the shared turbulence-model connectivity.
+    if (stateResConInfo_.found("nuTildaRes"))
+    {
+        List<word>& secondRing = stateResConInfo_["nuTildaRes"][2];
+        if (!secondRing.found("U"))
+        {
+            secondRing.append("U");
+        }
+    }
+
     // need to remove the phi state for turbModel because DAHisaFoam does not use phi as
     // the state variable
     forAll(stateInfo_["modelStates"], idxI)
