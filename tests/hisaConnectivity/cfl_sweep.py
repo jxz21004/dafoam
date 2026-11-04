@@ -19,11 +19,14 @@ p.add_argument('--hisa-lib',type=Path,required=True)
 p.add_argument('--steps',type=int,default=500)
 p.add_argument('--jacobian',default='LaxFriedrichs')
 p.add_argument('--pc-jacobian')
+p.add_argument('--reconstruction',choices=['wVanLeer','firstOrder'])
+p.add_argument('--flux-scheme',choices=['AUSMPlusUp','LaxFriedrichs'])
 p.add_argument('--bounding',action='store_true')
 p.add_argument('--matrix-free',action='store_true')
 p.add_argument('--freeze-sa',action='store_true')
 p.add_argument('--audit-sa',action='store_true')
 p.add_argument('--direction-audit',action='store_true')
+p.add_argument('--direction-reference',type=Path)
 p.add_argument('--limited-update',action='store_true')
 p.add_argument('--update-limit',type=float,default=0.2)
 p.add_argument('--update-max-trials',type=int,default=4)
@@ -37,10 +40,21 @@ results=[]
 for cfl in a.cfl:
  case=out/('cfl'+str(cfl).replace('.','_'));case.mkdir()
  for name in ['constant','system']:shutil.copytree(source/name,case/name)
+ if a.direction_reference:
+  for name in ['auditDeltaRho','auditDeltaE','auditDeltaMom']:
+   f=a.direction_reference/name
+   if not f.exists():f=f.with_suffix('.gz')
+   shutil.copy2(f,case/'constant'/f.name)
  # Keep only volume fields, not saved pseudo-time/CFL control state.
  (case/'0').mkdir()
  for f in (source/a.source_time).iterdir():
   if f.is_file() and not f.name.startswith('pseudoCo'):shutil.copy2(f,case/'0'/f.name)
+ path=case/'system/fvSchemes';s=path.read_text()
+ if a.reconstruction:
+  s,n=re.subn(r'(reconstruct\((?:rho|U|T)\)\s+)[^;]+;',lambda m:m[1]+a.reconstruction+';',s);assert n==3
+ if a.flux_scheme:
+  s,n=re.subn(r'(?m)^(fluxScheme\s+)[^;]+;',lambda m:m[1]+a.flux_scheme+';',s);assert n==1
+ path.write_text(s)
  path=case/'system/controlDict';s=path.read_text()
  for key,value in [('endTime',a.steps),('writeInterval',a.steps)]:
   s,n=re.subn(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+str(value)+';',s);assert n==1
@@ -56,7 +70,7 @@ for cfl in a.cfl:
  s=re.sub(r'(inviscidJacobian\s+)[^;]+;',lambda m:m[1]+a.jacobian+';',s)
  if a.pc_jacobian:
   s=s.replace('preconditioner    LUSGS;', 'preconditioner    LUSGS;\n        LUSGS { inviscidJacobian '+a.pc_jacobian+'; viscousJacobian laplacian; }')
- for key,value in [('directionAudit',str(a.direction_audit).lower()),('limitedUpdate',str(a.limited_update).lower()),('updateLimit',str(a.update_limit)),('updateMaxTrials',str(a.update_max_trials)),('matrixFree',str(a.matrix_free).lower()),('matrixFreeEpsilon',str(a.mf_epsilon)),('matrixFreeCheck',str(a.mf_check).lower())]:
+ for key,value in [('directionAuditUseStored',str(a.direction_reference is not None).lower()),('directionAudit',str(a.direction_audit).lower()),('limitedUpdate',str(a.limited_update).lower()),('updateLimit',str(a.update_limit)),('updateMaxTrials',str(a.update_max_trials)),('matrixFree',str(a.matrix_free).lower()),('matrixFreeEpsilon',str(a.mf_epsilon)),('matrixFreeCheck',str(a.mf_check).lower())]:
   if re.search(r'(?m)^\s*'+key+r'\s+',s):
    s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
   elif a.matrix_free or a.limited_update or a.direction_audit:
@@ -75,7 +89,7 @@ for cfl in a.cfl:
    proc=subprocess.run([sys.executable,str(Path(__file__).with_name('peak_rss_runner.py')),str(runner),'--case',str(case),'--library-dir',str(a.hisa_lib.resolve()),'--restart'],stdout=log,stderr=subprocess.STDOUT,timeout=180)
    code=proc.returncode
   except subprocess.TimeoutExpired:code='timeout'
- row={'freeze_sa':a.freeze_sa,'audit_sa':a.audit_sa,'direction_audit':a.direction_audit,'limited_update':a.limited_update,'update_limit':a.update_limit,'update_max_trials':a.update_max_trials,'matrix_free':a.matrix_free,'mf_epsilon':a.mf_epsilon,'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
+ row={'direction_reference':str(a.direction_reference) if a.direction_reference else None,'flux_scheme_override':a.flux_scheme,'reconstruction_override':a.reconstruction,'freeze_sa':a.freeze_sa,'audit_sa':a.audit_sa,'direction_audit':a.direction_audit,'limited_update':a.limited_update,'update_limit':a.update_limit,'update_max_trials':a.update_max_trials,'matrix_free':a.matrix_free,'mf_epsilon':a.mf_epsilon,'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
  text=(case/'primal.log').read_text();actual=[float(v) for v in re.findall(r'Pseudo Courant No:\s*(\S+)',text)]
  row['actual_cfl_range']=[min(actual),max(actual)] if actual else None
  rss=case/'peak_rss_kb.txt';row['peak_rss_kb']=int(rss.read_text()) if rss.exists() else None

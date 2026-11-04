@@ -69,3 +69,6 @@ unchanged. No full runtime regression of other solvers was performed.
 See [SA refresh, frozen-SA and update-direction checks](stagnationDiagnostics/README.md)
 for the follow-up to the unsuccessful bounded-update experiment. The measured
 approximate-Jacobian prediction mismatch is a diagnostic finding, not a fix.
+
+The [fixed-direction flux/reconstruction audit](fluxDirection/README.md) further
+separates reconstruction changes from the AUSM/LF operator mismatch.
