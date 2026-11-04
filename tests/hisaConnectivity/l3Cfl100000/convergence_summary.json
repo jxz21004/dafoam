@@ -1,0 +1,110 @@
+{
+  "threshold": 1e-08,
+  "residual_definition": "HiSA normalized outer initial residual (not the GMRES final inner residual and not a strict initial-relative residual)",
+  "flow_threshold_met": false,
+  "sa_last_initial_residual": 7.650323303665213e-07,
+  "sa_last_final_residual": 1.4161354592555711e-08,
+  "iterations": 10000,
+  "outer_samples": 10000,
+  "seconds": 318.7881016450001,
+  "gmres_subspace": 40,
+  "gmres_relative_tolerance": 0.05,
+  "preconditioner": "LUSGS; LaxFriedrichs inviscid + laplacian viscous + pseudo-time diagonal",
+  "cfl_cap": 100000,
+  "cfl_observed_max": 78.09774032719523,
+  "last": {
+    "iteration": 10000,
+    "cfl": 57.53407997504017,
+    "rho": 0.015873468192941016,
+    "rhoUx": 0.01515428812716392,
+    "rhoUy": 0.0046565770998274435,
+    "rhoUz": 0.0062925806431630175,
+    "rhoE": 0.018985174100926164,
+    "max_outer_residual": 0.018985174100926164,
+    "krylov_steps": 7
+  },
+  "total_krylov_steps": 69914,
+  "last100_mean_outer": 0.01895540757361708,
+  "samples": {
+    "1": {
+      "iteration": 1,
+      "cfl": 1.0,
+      "rho": 0.999999999998707,
+      "rhoUx": 0.9992888516323897,
+      "rhoUy": 0.0008156359034347619,
+      "rhoUz": 0.034786721708782116,
+      "rhoE": 0.9999999999992958,
+      "max_outer_residual": 0.9999999999992958,
+      "krylov_steps": 5
+    },
+    "100": {
+      "iteration": 100,
+      "cfl": 76.7938570104245,
+      "rho": 0.01196206636066775,
+      "rhoUx": 0.010942203432865207,
+      "rhoUy": 0.0033791903398844732,
+      "rhoUz": 0.008117980564789736,
+      "rhoE": 0.013929476338779527,
+      "max_outer_residual": 0.013929476338779527,
+      "krylov_steps": 7
+    },
+    "1000": {
+      "iteration": 1000,
+      "cfl": 57.5272518331463,
+      "rho": 0.01577250706647974,
+      "rhoUx": 0.015134294436505538,
+      "rhoUy": 0.004612596309766081,
+      "rhoUz": 0.006284982485129187,
+      "rhoE": 0.018872005956845832,
+      "max_outer_residual": 0.018872005956845832,
+      "krylov_steps": 7
+    },
+    "2000": {
+      "iteration": 2000,
+      "cfl": 57.48611837386843,
+      "rho": 0.015796067493650586,
+      "rhoUx": 0.015118889892870057,
+      "rhoUy": 0.004632228917451619,
+      "rhoUz": 0.006292091616603522,
+      "rhoE": 0.018903130351139694,
+      "max_outer_residual": 0.018903130351139694,
+      "krylov_steps": 7
+    },
+    "5000": {
+      "iteration": 5000,
+      "cfl": 57.54312030751293,
+      "rho": 0.01578755171701153,
+      "rhoUx": 0.01513651873935715,
+      "rhoUy": 0.004634714432944011,
+      "rhoUz": 0.006289529203845106,
+      "rhoE": 0.018890458619041137,
+      "max_outer_residual": 0.018890458619041137,
+      "krylov_steps": 7
+    },
+    "10000": {
+      "iteration": 10000,
+      "cfl": 57.53407997504017,
+      "rho": 0.015873468192941016,
+      "rhoUx": 0.01515428812716392,
+      "rhoUy": 0.0046565770998274435,
+      "rhoUz": 0.0062925806431630175,
+      "rhoE": 0.018985174100926164,
+      "max_outer_residual": 0.018985174100926164,
+      "krylov_steps": 7
+    }
+  },
+  "fixed_definition_relative_l2": 0.025729620895535363,
+  "raw_residual_l2": 438957.5037118538,
+  "raw_residual_max": 102604.9545632265,
+  "temperature_range": [
+    181.98152580721663,
+    317.9032318329261
+  ],
+  "functions": {
+    "cd": 0.1303597670448656,
+    "cl": 0.3773142914618593
+  },
+  "solver_converged_message": false,
+  "gradient_verified": false,
+  "converged": false
+}
