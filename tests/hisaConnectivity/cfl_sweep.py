@@ -21,6 +21,9 @@ p.add_argument('--jacobian',default='LaxFriedrichs')
 p.add_argument('--pc-jacobian')
 p.add_argument('--bounding',action='store_true')
 p.add_argument('--matrix-free',action='store_true')
+p.add_argument('--limited-update',action='store_true')
+p.add_argument('--update-limit',type=float,default=0.2)
+p.add_argument('--update-max-trials',type=int,default=4)
 p.add_argument('--mf-epsilon',type=float,default=1e-6)
 p.add_argument('--mf-check',action='store_true')
 p.add_argument('--cfl',type=float,nargs='+',default=[58,100,300,1000])
@@ -42,7 +45,7 @@ for cfl in a.cfl:
  path=case/'system/fvSolution';s=path.read_text()
  for key,value in [('pseudoCoNum',cfl),('pseudoCoNumMax',100000),('pseudoCoNumMaxIncreaseFactor',1)]:
   s,n=re.subn(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+str(value)+';',s);assert n==1
- for key,value in [('resetPseudo','true'),('pseudoCoNumMinDecreaseFactor','1')]:
+ for key,value in [('resetPseudo','false' if a.limited_update else 'true'),('pseudoCoNumMinDecreaseFactor','1')]:
   if re.search(r'(?m)^\s*'+key+r'\s+',s):
    s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
   else:
@@ -50,10 +53,10 @@ for cfl in a.cfl:
  s=re.sub(r'(inviscidJacobian\s+)[^;]+;',lambda m:m[1]+a.jacobian+';',s)
  if a.pc_jacobian:
   s=s.replace('preconditioner    LUSGS;', 'preconditioner    LUSGS;\n        LUSGS { inviscidJacobian '+a.pc_jacobian+'; viscousJacobian laplacian; }')
- for key,value in [('matrixFree',str(a.matrix_free).lower()),('matrixFreeEpsilon',str(a.mf_epsilon)),('matrixFreeCheck',str(a.mf_check).lower())]:
+ for key,value in [('limitedUpdate',str(a.limited_update).lower()),('updateLimit',str(a.update_limit)),('updateMaxTrials',str(a.update_max_trials)),('matrixFree',str(a.matrix_free).lower()),('matrixFreeEpsilon',str(a.mf_epsilon)),('matrixFreeCheck',str(a.mf_check).lower())]:
   if re.search(r'(?m)^\s*'+key+r'\s+',s):
    s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
-  elif a.matrix_free:
+  elif a.matrix_free or a.limited_update:
    s=s.replace('GMRES\n    {','GMRES\n    {\n        '+key+' '+value+';')
  if a.matrix_free:
   s=re.sub(r'(maxIter\s+)[^;]+;',r'\g<1>3;',s)
@@ -64,12 +67,13 @@ for cfl in a.cfl:
  start=time.monotonic()
  with (case/'primal.log').open('w') as log:
   try:
-   proc=subprocess.run([sys.executable,str(runner),'--case',str(case),'--library-dir',str(a.hisa_lib.resolve()),'--restart'],stdout=log,stderr=subprocess.STDOUT,timeout=180)
+   proc=subprocess.run([sys.executable,str(Path(__file__).with_name('peak_rss_runner.py')),str(runner),'--case',str(case),'--library-dir',str(a.hisa_lib.resolve()),'--restart'],stdout=log,stderr=subprocess.STDOUT,timeout=180)
    code=proc.returncode
   except subprocess.TimeoutExpired:code='timeout'
- row={'matrix_free':a.matrix_free,'mf_epsilon':a.mf_epsilon,'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
+ row={'limited_update':a.limited_update,'update_limit':a.update_limit,'update_max_trials':a.update_max_trials,'matrix_free':a.matrix_free,'mf_epsilon':a.mf_epsilon,'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
  text=(case/'primal.log').read_text();actual=[float(v) for v in re.findall(r'Pseudo Courant No:\s*(\S+)',text)]
  row['actual_cfl_range']=[min(actual),max(actual)] if actual else None
+ rss=case/'peak_rss_kb.txt';row['peak_rss_kb']=int(rss.read_text()) if rss.exists() else None
  if code==0:
   report=json.loads((case/'primal_report.json').read_text());row['report']=report
   # Accumulate the last cumulative Krylov count of each outer solve.
@@ -83,6 +87,6 @@ for cfl in a.cfl:
   row['decades_reduction_per_primal_second']=-float(np.log10(report['fixed_definition_relative_l2']))/report['primal_seconds']
   row['initial_state_max_difference']=float(np.max(abs(np.load(case/'initial_state.npz')['state']-reference)))
   assert row['initial_state_max_difference'] < 1e-12, 'Restart state changed'
-  assert actual and all(abs(v-cfl)<1e-10 for v in actual), 'CFL was not held fixed'
+  assert actual and (a.limited_update or all(abs(v-cfl)<1e-10 for v in actual)), 'CFL was not held fixed'
  results.append(row);(out/'summary.json').write_text(json.dumps(results,indent=2)+'\n')
  print(json.dumps(row),flush=True)
