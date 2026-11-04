@@ -1,0 +1,434 @@
+{
+  "variable": "alpha_deg",
+  "step": 0.0001,
+  "base_report": {
+    "alpha": 2.0,
+    "primal_fail": 0,
+    "raw_residual_max": 0.0521051682022794,
+    "raw_residual_l2": 0.31859588645762,
+    "primal_seconds": 42.989706225998816,
+    "cells": 3024,
+    "primal_iterations": 1911,
+    "temperature_min": 201.31704472119796,
+    "temperature_max": 299.7266477770131,
+    "functions": {
+      "cd": 0.16378034584869205,
+      "cl": 0.29047489625612
+    },
+    "loaded_libraries": {
+      "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756",
+      "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"
+    },
+    "loaded_dafoam_libraries": {
+      "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3",
+      "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"
+    },
+    "accepted": false,
+    "gradient_verified": false,
+    "initialization": "saved fields",
+    "adjoint_settings_configured_but_not_run": {
+      "gmresRestart": 100,
+      "gmresMaxIters": 2000,
+      "gmresRelTol": 1e-08,
+      "gmresAbsTol": 1e-13,
+      "pcFillLevel": 1,
+      "jacMatReOrdering": "rcm",
+      "asmOverlap": 1,
+      "hisaPCFlux": 1,
+      "hisaForceJSTFlux": 0,
+      "hisaRemoveTauMCOff": 1
+    },
+    "initial_raw_residual_l2": 171760.77857181238,
+    "fixed_definition_relative_l2": 1.8548814758918698e-06
+  },
+  "fd_reports": {
+    "plus": {
+      "alpha": 2.0001,
+      "primal_fail": 0,
+      "raw_residual_max": 0.0008589902036336912,
+      "raw_residual_l2": 0.003926870274675313,
+      "primal_seconds": 23.102860574996157,
+      "cells": 3024,
+      "primal_iterations": 989,
+      "temperature_min": 201.31690288913683,
+      "temperature_max": 299.72664309297073,
+      "functions": {
+        "cd": 0.16378111056904696,
+        "cl": 0.2904847632687796
+      },
+      "loaded_libraries": {
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756",
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"
+      },
+      "loaded_dafoam_libraries": {
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3",
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"
+      },
+      "accepted": false,
+      "gradient_verified": false,
+      "initialization": "saved fields",
+      "adjoint_settings_configured_but_not_run": {
+        "gmresRestart": 100,
+        "gmresMaxIters": 2000,
+        "gmresRelTol": 1e-08,
+        "gmresAbsTol": 1e-13,
+        "pcFillLevel": 1,
+        "jacMatReOrdering": "rcm",
+        "asmOverlap": 1,
+        "hisaPCFlux": 1,
+        "hisaForceJSTFlux": 0,
+        "hisaRemoveTauMCOff": 1
+      },
+      "initial_raw_residual_l2": 0.3185958874120909,
+      "fixed_definition_relative_l2": 0.012325552305689574
+    },
+    "minus": {
+      "alpha": 1.9999,
+      "primal_fail": 0,
+      "raw_residual_max": 0.000790488897424062,
+      "raw_residual_l2": 0.003590922515922182,
+      "primal_seconds": 23.8248072819988,
+      "cells": 3024,
+      "primal_iterations": 996,
+      "temperature_min": 201.3172110024273,
+      "temperature_max": 299.7266493647632,
+      "functions": {
+        "cd": 0.16377951438819122,
+        "cl": 0.2904648238086756
+      },
+      "loaded_libraries": {
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756",
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"
+      },
+      "loaded_dafoam_libraries": {
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3",
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"
+      },
+      "accepted": false,
+      "gradient_verified": false,
+      "initialization": "saved fields",
+      "adjoint_settings_configured_but_not_run": {
+        "gmresRestart": 100,
+        "gmresMaxIters": 2000,
+        "gmresRelTol": 1e-08,
+        "gmresAbsTol": 1e-13,
+        "pcFillLevel": 1,
+        "jacMatReOrdering": "rcm",
+        "asmOverlap": 1,
+        "hisaPCFlux": 1,
+        "hisaForceJSTFlux": 0,
+        "hisaRemoveTauMCOff": 1
+      },
+      "initial_raw_residual_l2": 0.31859588741209105,
+      "fixed_definition_relative_l2": 0.011271088729646618
+    },
+    "zero": {
+      "alpha": 2.0,
+      "primal_fail": 0,
+      "raw_residual_max": 0.0008582658142894812,
+      "raw_residual_l2": 0.003880323541214237,
+      "primal_seconds": 26.203703671999392,
+      "cells": 3024,
+      "primal_iterations": 983,
+      "temperature_min": 201.31705694133834,
+      "temperature_max": 299.7266462287122,
+      "functions": {
+        "cd": 0.16378031247276656,
+        "cl": 0.2904747935716571
+      },
+      "loaded_libraries": {
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756",
+        "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"
+      },
+      "loaded_dafoam_libraries": {
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3",
+        "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"
+      },
+      "accepted": false,
+      "gradient_verified": false,
+      "initialization": "saved fields",
+      "adjoint_settings_configured_but_not_run": {
+        "gmresRestart": 100,
+        "gmresMaxIters": 2000,
+        "gmresRelTol": 1e-08,
+        "gmresAbsTol": 1e-13,
+        "pcFillLevel": 1,
+        "jacMatReOrdering": "rcm",
+        "asmOverlap": 1,
+        "hisaPCFlux": 1,
+        "hisaForceJSTFlux": 0,
+        "hisaRemoveTauMCOff": 1
+      },
+      "initial_raw_residual_l2": 0.31859588645758297,
+      "fixed_definition_relative_l2": 0.012179452736690789
+    }
+  },
+  "fd_outer_residuals": {
+    "plus": 9.922962259659419e-11,
+    "minus": 9.904272193804574e-11,
+    "zero": 9.946560622652154e-11
+  },
+  "fd_sa_linear": {
+    "plus": {
+      "initial": 1.0754666416724012e-13,
+      "final": 4.30288936670535e-16
+    },
+    "minus": {
+      "initial": 9.738674412585787e-14,
+      "final": 4.839580703205846e-16
+    },
+    "zero": {
+      "initial": 9.66920714471911e-14,
+      "final": 4.233960070415159e-16
+    }
+  },
+  "fd": {
+    "cd": 0.007980904278698242,
+    "cl": 0.09969730051989645
+  },
+  "fd_history": {
+    "1": {
+      "cd": 0.005071546172602526,
+      "cl": -0.0027917245704056626
+    },
+    "20": {
+      "cd": 0.006891360115057754,
+      "cl": 0.06690287115779237
+    },
+    "40": {
+      "cd": 0.0075148611410058574,
+      "cl": 0.09004108324273119
+    },
+    "60": {
+      "cd": 0.007753046663561136,
+      "cl": 0.09616773192472339
+    },
+    "80": {
+      "cd": 0.007839003266785216,
+      "cl": 0.09770413497173225
+    },
+    "100": {
+      "cd": 0.007881199642761905,
+      "cl": 0.09841126901471986
+    },
+    "120": {
+      "cd": 0.007907797573980524,
+      "cl": 0.09881569125125278
+    },
+    "140": {
+      "cd": 0.007926128444274427,
+      "cl": 0.09905380071700831
+    },
+    "160": {
+      "cd": 0.007938527935430484,
+      "cl": 0.09919480338488329
+    },
+    "180": {
+      "cd": 0.007946633812649928,
+      "cl": 0.09927733119752258
+    },
+    "200": {
+      "cd": 0.007951865274719028,
+      "cl": 0.09932566812254073
+    },
+    "220": {
+      "cd": 0.007955313632568295,
+      "cl": 0.09935539163480334
+    },
+    "240": {
+      "cd": 0.0079577277393994,
+      "cl": 0.09937597749393179
+    },
+    "260": {
+      "cd": 0.007959577509875082,
+      "cl": 0.09939276252785012
+    },
+    "280": {
+      "cd": 0.007961135065764902,
+      "cl": 0.09940793808255188
+    },
+    "300": {
+      "cd": 0.007962535932687365,
+      "cl": 0.09942389233769111
+    },
+    "320": {
+      "cd": 0.00796387487289607,
+      "cl": 0.09944040866460835
+    },
+    "340": {
+      "cd": 0.007965172205554039,
+      "cl": 0.09945722263482448
+    },
+    "360": {
+      "cd": 0.00796641871345094,
+      "cl": 0.09947417865086017
+    },
+    "380": {
+      "cd": 0.00796761673374502,
+      "cl": 0.09949103609713239
+    },
+    "400": {
+      "cd": 0.007968761616683473,
+      "cl": 0.0995075473597673
+    },
+    "420": {
+      "cd": 0.007969847618527481,
+      "cl": 0.099523506879029
+    },
+    "440": {
+      "cd": 0.007970870184864642,
+      "cl": 0.09953875958951253
+    },
+    "460": {
+      "cd": 0.007971826538749616,
+      "cl": 0.09955319839688448
+    },
+    "480": {
+      "cd": 0.007972715639348316,
+      "cl": 0.09956675775885104
+    },
+    "500": {
+      "cd": 0.007973537923117169,
+      "cl": 0.09957940604182758
+    },
+    "520": {
+      "cd": 0.007974294996271336,
+      "cl": 0.09959113798280184
+    },
+    "540": {
+      "cd": 0.007974989318648706,
+      "cl": 0.09960196819563949
+    },
+    "560": {
+      "cd": 0.007975623946138155,
+      "cl": 0.09961192546620312
+    },
+    "580": {
+      "cd": 0.007976202305720603,
+      "cl": 0.09962104851518605
+    },
+    "600": {
+      "cd": 0.007976728028519231,
+      "cl": 0.09962938234631125
+    },
+    "620": {
+      "cd": 0.007977204814629824,
+      "cl": 0.09963697564258078
+    },
+    "640": {
+      "cd": 0.007977636342637595,
+      "cl": 0.09964387875455172
+    },
+    "660": {
+      "cd": 0.007978026196064913,
+      "cl": 0.0996501421696161
+    },
+    "680": {
+      "cd": 0.007978377818684823,
+      "cl": 0.09965581546506064
+    },
+    "700": {
+      "cd": 0.0079786944834348,
+      "cl": 0.09966094655450286
+    },
+    "720": {
+      "cd": 0.007978979271044961,
+      "cl": 0.09966558115526158
+    },
+    "740": {
+      "cd": 0.007979235065874724,
+      "cl": 0.09966976246944537
+    },
+    "760": {
+      "cd": 0.007979464548696358,
+      "cl": 0.0996735310246355
+    },
+    "780": {
+      "cd": 0.007979670198637878,
+      "cl": 0.09967692454732058
+    },
+    "800": {
+      "cd": 0.007979854301093381,
+      "cl": 0.09967997802118322
+    },
+    "820": {
+      "cd": 0.007980018956049717,
+      "cl": 0.09968272370430853
+    },
+    "840": {
+      "cd": 0.007980166083915163,
+      "cl": 0.09968519118969121
+    },
+    "860": {
+      "cd": 0.007980297439674766,
+      "cl": 0.09968740759480621
+    },
+    "880": {
+      "cd": 0.007980414619551679,
+      "cl": 0.09968939766596963
+    },
+    "900": {
+      "cd": 0.007980519075440062,
+      "cl": 0.09969118392405552
+    },
+    "920": {
+      "cd": 0.007980612122676645,
+      "cl": 0.09969278683380489
+    },
+    "940": {
+      "cd": 0.007980694954196066,
+      "cl": 0.09969422491484803
+    },
+    "960": {
+      "cd": 0.007980768645388103,
+      "cl": 0.09969551491489925
+    },
+    "980": {
+      "cd": 0.007980834167004014,
+      "cl": 0.09969667197073928
+    }
+  },
+  "midpoint_minus_zero": {
+    "cd": 5.852512918735897e-12,
+    "cl": -3.29294924661383e-11
+  },
+  "adjoint": {
+    "executed": true,
+    "unconverged_base_diagnostic": true,
+    "gmres_restart": 40,
+    "pc_matrix": "calcdRdWT(isPC=0): full-residual colored FD Jacobian transpose",
+    "pc_shape": [
+      18144,
+      18144
+    ],
+    "pc_nonzeros": 2274356.0,
+    "preconditioning": "right LU of full-residual FD matrix (small-case diagnostic)",
+    "pc_residual": "same high-order residual as AD operator",
+    "gradient_verified": false,
+    "functions": {
+      "cd": {
+        "d_dalpha": 0.007981350289950485,
+        "linear_fail": 0,
+        "solve_seconds": 63.15378692700324,
+        "gmres_iterations": 4,
+        "ksp_reason": 2,
+        "true_linear_relative_residual": 1.5459684361053124e-10,
+        "fd": 0.007980904278698242,
+        "relative_difference_to_fd": 5.588480160497674e-05,
+        "independent_linear_pass_1e8": true
+      },
+      "cl": {
+        "d_dalpha": 0.09970684338430044,
+        "linear_fail": 0,
+        "solve_seconds": 0.7159782919989084,
+        "gmres_iterations": 4,
+        "ksp_reason": 2,
+        "true_linear_relative_residual": 5.563003039191098e-11,
+        "fd": 0.09969730051989645,
+        "relative_difference_to_fd": 9.571838308791163e-05,
+        "independent_linear_pass_1e8": true
+      }
+    }
+  },
+  "scope": "First-order L3 alpha gradients at one FD step only; not a second-order or geometry-gradient validation."
+}

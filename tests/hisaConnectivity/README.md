@@ -80,3 +80,7 @@ stagnation, with a direct second-order control.
 [Adjoint gradients at the residual plateau](gradientAtPlateau/README.md) compare
 alpha sensitivities against central differences with a 1e-4-degree step,
 including independent adjoint residual checks and finite-iteration FD drift.
+
+[First-order alpha-gradient check](firstOrderGradient/README.md) gives a positive
+comparison at h=1e-4 degrees, with independently verified adjoint linear
+residuals; this does not validate the stalled second-order gradients.
