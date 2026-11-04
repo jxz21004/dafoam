@@ -17,6 +17,9 @@ p.add_argument('--source-time',default='10000')
 p.add_argument('--hisa-repo',type=Path,required=True)
 p.add_argument('--hisa-lib',type=Path,required=True)
 p.add_argument('--steps',type=int,default=500)
+p.add_argument('--jacobian',default='LaxFriedrichs')
+p.add_argument('--pc-jacobian')
+p.add_argument('--bounding',action='store_true')
 p.add_argument('--cfl',type=float,nargs='+',default=[58,100,300,1000])
 a=p.parse_args();source=a.source.resolve();out=a.output.resolve();out.mkdir(parents=True,exist_ok=False)
 runner=a.hisa_repo.resolve()/'tests/wingAero/run_case.py'
@@ -41,6 +44,12 @@ for cfl in a.cfl:
    s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
   else:
    s=s.replace('pseudoTime\n{','pseudoTime\n{\n    '+key+' '+value+';')
+ s=re.sub(r'(inviscidJacobian\s+)[^;]+;',lambda m:m[1]+a.jacobian+';',s)
+ if a.pc_jacobian:
+  s=s.replace('preconditioner    LUSGS;', 'preconditioner    LUSGS;\n        LUSGS { inviscidJacobian '+a.pc_jacobian+'; viscousJacobian laplacian; }')
+ if a.bounding:
+  for key,value in [('localTimesteppingBounding','true'),('localTimesteppingLowerBound','0.8'),('localTimesteppingUpperBound','1.2')]:
+   s=re.sub(r'(?m)^(\s*'+key+r'\s+)[^;]+;',lambda m:m[1]+value+';',s)
  path.write_text(s)
  start=time.monotonic()
  with (case/'primal.log').open('w') as log:
@@ -48,7 +57,7 @@ for cfl in a.cfl:
    proc=subprocess.run([sys.executable,str(runner),'--case',str(case),'--library-dir',str(a.hisa_lib.resolve()),'--restart'],stdout=log,stderr=subprocess.STDOUT,timeout=180)
    code=proc.returncode
   except subprocess.TimeoutExpired:code='timeout'
- row={'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
+ row={'jacobian':a.jacobian,'pc_jacobian':a.pc_jacobian or a.jacobian,'bounding':a.bounding,'cfl':cfl,'returncode':code,'wall_seconds_including_startup':time.monotonic()-start,'case':str(case)}
  text=(case/'primal.log').read_text();actual=[float(v) for v in re.findall(r'Pseudo Courant No:\s*(\S+)',text)]
  row['actual_cfl_range']=[min(actual),max(actual)] if actual else None
  if code==0:
