@@ -72,3 +72,7 @@ approximate-Jacobian prediction mismatch is a diagnostic finding, not a fix.
 
 The [fixed-direction flux/reconstruction audit](fluxDirection/README.md) further
 separates reconstruction changes from the AUSM/LF operator mismatch.
+
+[First-order convergence and second-order continuation](orderStartup/README.md)
+records a first-order outer-tolerance success and the subsequent second-order
+stagnation, with a direct second-order control.
