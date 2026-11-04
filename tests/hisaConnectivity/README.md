@@ -63,3 +63,9 @@ paths/hashes are recorded in `summary.json`.
 Shared SA, SimpleFoam state information, and RhoSimpleFoam state information
 were checked against this clone's HEAD with line endings normalized and are
 unchanged. No full runtime regression of other solvers was performed.
+
+## L3 stagnation diagnostics
+
+See [SA refresh, frozen-SA and update-direction checks](stagnationDiagnostics/README.md)
+for the follow-up to the unsuccessful bounded-update experiment. The measured
+approximate-Jacobian prediction mismatch is a diagnostic finding, not a fix.

@@ -98,6 +98,13 @@ label DAHisaFoam::solvePrimal()
     runTime.setTime(0.0, 0);
 
     bool steadyState = solver.steadyState();
+    // Opt-in, HiSA-only diagnostics. Shared turbulence models are unchanged.
+    const dictionary diagnostics = meshPtr_->solutionDict().subOrEmptyDict("hisaDiagnostics");
+    const bool freezeSA = diagnostics.lookupOrDefault<bool>("freezeSA", false);
+    const bool auditSA = diagnostics.lookupOrDefault<bool>("auditSA", false);
+    if ((freezeSA || auditSA) && (!steadyState || !meshPtr_->foundObject<volScalarField>("nuTilda")))
+        FatalErrorInFunction << "SA diagnostics require steady HiSA with nuTilda" << exit(FatalError);
+
 
     if (!steadyState)
     {
@@ -173,7 +180,29 @@ label DAHisaFoam::solvePrimal()
 
             // NOTE: we removed the turbulence correct in hisaModule, so we need to call it here
             // NOTE: this trick works for ESI version of OpenFOAM only!
-            daTurbulenceModelPtr_->correct(printToScreen_);
+            if (!freezeSA) daTurbulenceModelPtr_->correct(printToScreen_);
+            if (auditSA && runTime.value() >= runTime.endTime().value())
+            {
+                dictionary opts;
+                opts.set("isPC", 0);
+                daTurbulenceModelPtr_->calcResiduals(opts);
+                const scalarField lagged(meshPtr_->lookupObject<volScalarField>("nuTildaRes").primitiveField());
+                const scalarField oldPhi(meshPtr_->lookupObject<surfaceScalarField>("phi").primitiveField());
+                // Recompute flux at the updated flow state, without a new SA solve.
+                daResidualPtr_->calcResiduals(opts);
+                daTurbulenceModelPtr_->calcResiduals(opts);
+                const scalarField refreshed(meshPtr_->lookupObject<volScalarField>("nuTildaRes").primitiveField());
+                const scalarField newPhi(meshPtr_->lookupObject<surfaceScalarField>("phi").primitiveField());
+                this->updateStateBoundaryConditions();
+                this->calcResiduals();
+                const scalarField full(meshPtr_->lookupObject<volScalarField>("nuTildaRes").primitiveField());
+                Info << "SAAudit: laggedL2 " << sqrt(gSum(sqr(lagged)))
+                     << " refreshedL2 " << sqrt(gSum(sqr(refreshed)))
+                     << " fullL2 " << sqrt(gSum(sqr(full)))
+                     << " refreshDifferenceL2 " << sqrt(gSum(sqr(refreshed-lagged)))
+                     << " boundaryDifferenceL2 " << sqrt(gSum(sqr(full-refreshed)))
+                     << " phiDifferenceL2 " << sqrt(gSum(sqr(newPhi-oldPhi))) << endl;
+            }
 
             if (steadyState)
             {
