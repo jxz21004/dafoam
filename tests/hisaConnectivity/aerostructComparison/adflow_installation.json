@@ -1,0 +1,10 @@
+{
+  "source_commit": "8155e981",
+  "version": "2.13.1",
+  "python_target": "/mdouser/test_aerostructure/adflow/build-local/python",
+  "library_sha256": "b88cfbea18bf54fcb2c77054be8995b1dc25359170ef0395350152c1f72fb5c9",
+  "PETSC_DIR": "/home/dafoamuser/dafoam/packages/petsc-3.21.6",
+  "PETSC_ARCH": "real-opt",
+  "CGNS_HOME": "/home/dafoamuser/dafoam/packages/CGNS-4.5.0/opt-gfortran",
+  "source_changes": "Build copy normalized CRLF only; GFortran default config."
+}

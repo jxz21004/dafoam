@@ -1,0 +1,117 @@
+{
+  "solver": "adflow",
+  "source_script": "/mdouser/test_aerostructure/asopt2.py",
+  "source_sha256": "47bdc2ddd52880fa263d31d803005d9d5f17a228acbea7684179a36c51d22b15",
+  "case": "/mdouser/test_aerostructure/reports/aerostruct_comparison/adflow",
+  "mpi_ranks": 1,
+  "coupling_maxiter": 100,
+  "coupling_atol": 0.0001,
+  "coupling_rtol": 1e-08,
+  "setup_seconds": 11.695046411000021,
+  "solve_seconds": 40.03235458599988,
+  "completed": true,
+  "outputs": {
+    "cruise.aero_post.cd": 0.026278237656958893,
+    "cruise.aero_post.cl": 0.21993810930814048,
+    "cruise.aero_post.cmy": -0.3385943106693693,
+    "cruise.coupling.aero.force.f_aero": {
+      "shape": [
+        1080
+      ],
+      "norm": 48606.322821743226,
+      "min": -9480.607243033892,
+      "max": 15810.905121469808
+    },
+    "cruise.coupling.disp_xfer.u_aero": {
+      "shape": [
+        1080
+      ],
+      "norm": 18.06842830249295,
+      "min": -0.026898767659773854,
+      "max": 1.2929030855721788
+    },
+    "cruise.coupling.load_xfer.f_aero_struct": {
+      "shape": [
+        44076
+      ],
+      "norm": 7297.298715599978,
+      "min": -231.15252622033933,
+      "max": 486.1335662761081
+    },
+    "cruise.coupling.struct.masker.u_struct_masked": {
+      "shape": [
+        44076
+      ],
+      "norm": 51.617944333827865,
+      "min": -0.07665840750906802,
+      "max": 1.2568277381584032
+    },
+    "cruise.ks_vmfailure": 1.0434725056673133,
+    "cruise.mass": 380.5458796171776,
+    "maneuver.aero_post.cd": 0.03701378749210648,
+    "maneuver.aero_post.cl": 0.41121843870083785,
+    "maneuver.aero_post.cmy": -0.5812405219547547,
+    "maneuver.coupling.aero.force.f_aero": {
+      "shape": [
+        1080
+      ],
+      "norm": 59152.32422759643,
+      "min": -6307.887178144526,
+      "max": 21608.637333262865
+    },
+    "maneuver.coupling.disp_xfer.u_aero": {
+      "shape": [
+        1080
+      ],
+      "norm": 33.18415816798097,
+      "min": -0.05695145759924453,
+      "max": 2.3603748769681143
+    },
+    "maneuver.coupling.load_xfer.f_aero_struct": {
+      "shape": [
+        44076
+      ],
+      "norm": 8936.542604763225,
+      "min": -237.18071905889755,
+      "max": 534.9611929459261
+    },
+    "maneuver.coupling.struct.masker.u_struct_masked": {
+      "shape": [
+        44076
+      ],
+      "norm": 95.20173878162872,
+      "min": -0.10860446431045004,
+      "max": 2.308021514103474
+    },
+    "maneuver.ks_vmfailure": 1.8479093463852256,
+    "cruise.coupling.struct.solver.u_struct": {
+      "shape": [
+        44076
+      ],
+      "norm": 51.617944333827865,
+      "min": -0.07665840750906802,
+      "max": 1.2568277381584032
+    },
+    "maneuver.coupling.struct.solver.u_struct": {
+      "shape": [
+        44076
+      ],
+      "norm": 95.20173878162872,
+      "min": -0.10860446431045004,
+      "max": 2.308021514103474
+    }
+  },
+  "coupling_iterations": {
+    "cruise": 11,
+    "maneuver": 11
+  },
+  "wall_seconds": 51.75575809499992,
+  "modules": {
+    "adflow": "/mdouser/test_aerostructure/adflow/build-local/python/adflow/__init__.py",
+    "tacs": "/home/dafoamuser/dafoam/repos/tacs/tacs/__init__.py",
+    "funtofem": "/home/dafoamuser/dafoam/repos/funtofem/funtofem/__init__.py",
+    "mphys": "/home/dafoamuser/dafoam/packages/miniconda3/lib/python3.12/site-packages/mphys/__init__.py",
+    "openmdao": "/home/dafoamuser/dafoam/packages/miniconda3/lib/python3.12/site-packages/openmdao/__init__.py"
+  },
+  "libraries": {}
+}
