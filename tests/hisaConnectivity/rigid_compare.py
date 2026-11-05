@@ -20,6 +20,7 @@ parser.add_argument('--solver', choices=['adflow', 'hisa'], required=True)
 parser.add_argument('--hisa-flux', choices=['AUSMPlusUp', 'JST'], default='AUSMPlusUp')
 parser.add_argument('--adflow-relative-tolerance', type=float, default=1e-8)
 parser.add_argument('--hisa-restart-fields', type=Path)
+parser.add_argument('--hisa-no-wall-functions', action='store_true')
 parser.add_argument('--hisa-adiabatic', action='store_true')
 parser.add_argument('--hisa-cfl', type=float, default=5.)
 args = parser.parse_args()
@@ -73,9 +74,12 @@ if args.solver == 'hisa':
            str(root / 'dafoam_case/validation/hisa_direction_build/lib'), '--alpha', '2']
     if args.hisa_restart_fields:
         cmd.append('--restart')
+    if args.hisa_no_wall_functions:
+        cmd.append('--no-wall-functions')
     (work / 'run_config.json').write_text(json.dumps({
         'flux': args.hisa_flux, 'cfl': args.hisa_cfl,
         'adiabatic_wall': args.hisa_adiabatic,
+        'wall_functions': not args.hisa_no_wall_functions,
         'restart_fields': str(fields), 'restart': bool(args.hisa_restart_fields),
         'command': cmd}, indent=2) + '\n')
     result = subprocess.run(cmd, check=False)
