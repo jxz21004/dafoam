@@ -42,3 +42,21 @@ python dafoam/tests/hisaConnectivity/forceAudit/summarize.py \
 ```
 
 后处理算例复制原始constant、system和2172目录，保持原始算例不变。faces.csv保存面中心、面积向量、压力、黏度和力分量；results.json保存积分结果；cgns_boundary_types.json保存通过本地CGNS C接口读取的边界枚举值。程序当前针对串行L3/2°审核，参考压力等常数固定于此算例，不作为通用后处理包发布。
+
+## 与 ADflow 的摩擦阻力对比
+
+从已有 `adflow_tight/rigid2_000_vol.cgns` 重载收敛场，不进行流场迭代。仅在固定状态上调用 `getResidual` 刷新壁面应力，再求 `cdp/cdv`。若省略刷新，黏性力缓存未初始化，首次提取结果无效，不能用于比较。刷新后总CD与原报告相差1.34e-10，总CL相差-3.09e-9，通过复现检查。CGNS读取有54条类型转换警告，因此以复现误差界定后处理精度。
+
+| 状态 | 黏性 CD | 压力 CD | 总 CD |
+|---|---:|---:|---:|
+| ADflow，绝热、已收敛 | 0.003739392 | 0.032450717 | 0.036190109 |
+| HiSA一阶，300 K、已收敛 | 0.009049969 | 0.154730359 | 0.163780328 |
+| HiSA一阶，绝热、4000步未收敛 | 0.008906065 | 0.154754973 | 0.163661037 |
+
+黏性CD是有效黏性应力合力沿来流方向的投影，作为摩擦阻力对比指标；不把它与局部皮肤摩擦系数Cf混淆。三者均用S=45.5、q=13402.323345、迎角2°。
+
+HiSA已收敛300 K状态的黏性阻力为ADflow的2.42倍，相差0.00531058，确实也偏大。绝热未收敛状态约为2.38倍，尚不能作为最终收敛比值。从已收敛300 K状态与ADflow的总阻力差分解看，约95.8%的差值来自压力项；摩擦偏大值得检查，但无法解释全部阻力差异。
+
+下一步定位摩擦差异，应核对壁面处理、y+、nut及局部剪切分布；HiSA采用nutUSpaldingWallFunction，尚未完成与ADflow壁面处理的等效性验证。离散、热边界及体网格差异仍存在，不直接将2.42倍判定为黏性应力实现错误。
+
+复现后处理：激活本地ADflow，运行`adflow_saved_forces.py --case reports/rigid_comparison/adflow_tight --output <新的输出目录>`。无`solver(ap)`调用；结果归档为`adflow_components.json`。首次未刷新缓存的失败提取保留在工作区`adflow_force_components`，有效提取为`adflow_force_components_refreshed`。

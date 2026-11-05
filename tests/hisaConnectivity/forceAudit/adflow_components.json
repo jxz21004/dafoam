@@ -1,0 +1,19 @@
+{
+  "functions": {
+    "rigid2_cd": 0.036190108950876196,
+    "rigid2_cdm": 0.0,
+    "rigid2_cdp": 0.03245071710904359,
+    "rigid2_cdv": 0.0037393918418326053,
+    "rigid2_cl": 0.4151687533527136,
+    "rigid2_clp": 0.4152426707101873,
+    "rigid2_clv": -7.391735747367878e-05
+  },
+  "difference_from_saved_report": {
+    "rigid2_cd": 1.3391180525568203e-10,
+    "rigid2_cl": -3.094096645561706e-09
+  },
+  "flow_iterations_executed": 0,
+  "source_case": "/mdouser/test_aerostructure/reports/rigid_comparison/adflow_tight",
+  "reference_area": 45.5,
+  "dynamic_pressure": 13402.323345186078
+}
