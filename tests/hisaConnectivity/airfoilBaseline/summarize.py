@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Summarize the current-HiSA standalone RAE2822 smoke test."""
 from pathlib import Path
-import hashlib,json,re
+import argparse,hashlib,json,re
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-root=Path('/mdouser/test_aerostructure');out=Path(__file__).resolve().parent
-case=root/'reports/hisa_airfoil_baseline/current_rae2822/simulation'
-log=Path('/tmp/rae_current.log').read_text()
+root=Path('/mdouser/test_aerostructure')
+p=argparse.ArgumentParser();p.add_argument('--case',type=Path,default=root/'reports/hisa_airfoil_baseline/current_rae2822/simulation');p.add_argument('--log',type=Path,default=Path('/tmp/rae_current.log'));p.add_argument('--output',type=Path,default=Path(__file__).resolve().parent);a=p.parse_args()
+out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);case=a.case.resolve()
+log=a.log.read_text()
 rows=np.loadtxt(case/'postProcessing/forceCoeffsCompressible/0/coefficient.dat')
 res=[]
 for line in log.splitlines():
