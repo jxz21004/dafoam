@@ -16,6 +16,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--root', type=Path, required=True)
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--solver', choices=['adflow', 'hisa'], required=True)
+parser.add_argument('--hisa-flux', choices=['AUSMPlusUp', 'JST'], default='AUSMPlusUp')
 parser.add_argument('--adflow-relative-tolerance', type=float, default=1e-8)
 args = parser.parse_args()
 root = args.root.resolve()
@@ -32,6 +33,13 @@ if args.solver == 'hisa':
         text, count = re.subn(r'(?m)^(\s*' + key + r'\s+)[^;]+;', r'\g<1>4000;', text)
         assert count == 1
     path.write_text(text)
+    if args.hisa_flux == 'JST':
+        path = work / 'system/fvSchemes'
+        text, count = re.subn(r'(?m)^fluxScheme\s+[^;]+;',
+                              'fluxScheme JST;\njst_k2 0.5;\njst_k4 0.02;\nsensorName pressure;',
+                              path.read_text())
+        assert count == 1
+        path.write_text(text)
     cmd = [sys.executable, str(root / 'Hisa4DAFoam/tests/wingAero/run_case.py'),
            '--case', str(work), '--library-dir',
            str(root / 'dafoam_case/validation/hisa_direction_build/lib'), '--alpha', '2']

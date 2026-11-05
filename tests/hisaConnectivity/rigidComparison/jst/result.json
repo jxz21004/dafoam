@@ -1,0 +1,16 @@
+{
+  "converged": false,
+  "flux": "JST",
+  "k2": 0.5,
+  "k4": 0.02,
+  "sensor": "pressure",
+  "cfl": 5,
+  "gmres_subspace": 40,
+  "max_steps": 4000,
+  "last_iteration": 1441,
+  "wrapper_exit_code": 250,
+  "termination": "native abort: temperature inversion exceeded 100 iterations",
+  "valid_final_cl": null,
+  "valid_final_cd": null,
+  "adflow_rerun": false
+}
