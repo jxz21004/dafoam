@@ -1,0 +1,11 @@
+{
+  "converged": false,
+  "new_steps": 4000,
+  "first_log_iteration": 2173,
+  "last_log_iteration": 6172,
+  "restart_state_max_abs_difference": 0.0,
+  "first_outer_residual": "0.0065124408239203941 (0.022950774036373793 0.0045623155317961036 0.0039987383308853477) 0.004067455150890382    Krylov steps: 0",
+  "last_outer_residual": "0.078290561445185411 (0.018619284110565862 0.0044525688756047368 0.014321783680289728) 0.11560705253819102    Krylov steps: 0",
+  "native_convergence_message": false,
+  "adflow_rerun": false
+}

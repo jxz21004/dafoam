@@ -1,0 +1,35 @@
+Pseudo Courant No: 1
+Pseudo deltaT: Min: 1.0846526345032156e-09 Mean: 0.0047295188534385519 Max: 0.075469401895082042
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 0.080609073160732514 (0.018625144551075508 0.0043740194762920967 0.015010194296045451) 0.11585579099756231    Krylov steps: 0
+  GMRES iteration: 1   Residual: 0.003016722962666698 (0.0005643346233558602 0.00013639222695628646 0.00065243222492107926) 0.0043719961029415264    Krylov steps: 2
+pseudoTime: iteration 6170
+Pseudo Courant No: 1
+Pseudo deltaT: Min: 1.0847614269211581e-09 Mean: 0.0047294711055677367 Max: 0.07546893009135118
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 0.081624262664909131 (0.018591579362853806 0.0043811448047749646 0.014620067377942613) 0.11857887681519141    Krylov steps: 0
+  GMRES iteration: 1   Residual: 0.002993438797805538 (0.00054456287045574032 0.00012905972270089555 0.00063233641299881977) 0.0043942526356163698    Krylov steps: 2
+pseudoTime: iteration 6171
+Pseudo Courant No: 1
+Pseudo deltaT: Min: 1.0849209367729088e-09 Mean: 0.0047294214808195336 Max: 0.07546839266663477
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 0.080513520956837448 (0.018714138148896289 0.0044080156339994922 0.014502589523161078) 0.11906355633347952    Krylov steps: 0
+  GMRES iteration: 1   Residual: 0.0028797254811426323 (0.00051821438978667464 0.00012799510471214829 0.00063399468642860919) 0.0042625627794411636    Krylov steps: 2
+Time = 4000
+
+pseudoTime: iteration 6172
+Pseudo Courant No: 1
+Pseudo deltaT: Min: 1.0845975657865135e-09 Mean: 0.0047293700645693109 Max: 0.075467793624021534
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 0.078290561445185411 (0.018619284110565862 0.0044525688756047368 0.014321783680289728) 0.11560705253819102    Krylov steps: 0
+  GMRES iteration: 1   Residual: 0.0026910505344672083 (0.00048836591376345319 0.00012670451214167642 0.00064349298534772893) 0.0039724546260738614    Krylov steps: 2
+nuTilda initRes: 1.5938802048300778e-06 finalRes: 7.0700210775111566e-10 nIters: 1
+Bounding nuTilda>9.9999999999999998e-17
+cd: 0.056172306600289365 final: 0.056172306600289365
+cl: 0.14527273535752827 final: 0.14527273535752827
+yPlus min: 0.76907125145293898 max: 19.486844292918967 mean: 9.4217117089508431
+ExecutionTime = 54.359999999999999 s  ClockTime = 66 s
+
+End
+
+VALIDATION_REPORT {"alpha": 2.0, "primal_fail": 0, "raw_residual_max": 810476.5763434934, "raw_residual_l2": 3783206.2170061665, "primal_seconds": 64.92604584399942, "cells": 3024, "primal_iterations": 4000, "temperature_min": 133.10620677652085, "temperature_max": 507.61121272417915, "functions": {"cd": 0.05617316717454093, "cl": 0.14527270395492176}, "loaded_libraries": {"/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756", "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"}, "loaded_dafoam_libraries": {"/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3", "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"}, "accepted": false, "gradient_verified": false, "initialization": "saved fields", "adjoint_settings_configured_but_not_run": {"gmresRestart": 100, "gmresMaxIters": 2000, "gmresRelTol": 1e-08, "gmresAbsTol": 1e-13, "pcFillLevel": 1, "jacMatReOrdering": "rcm", "asmOverlap": 1, "hisaPCFlux": 1, "hisaForceJSTFlux": 0, "hisaRemoveTauMCOff": 1}, "initial_raw_residual_l2": 1922263.493007995, "fixed_definition_relative_l2": 1.9680997068128951}

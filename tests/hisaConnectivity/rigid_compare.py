@@ -18,15 +18,28 @@ parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--solver', choices=['adflow', 'hisa'], required=True)
 parser.add_argument('--hisa-flux', choices=['AUSMPlusUp', 'JST'], default='AUSMPlusUp')
 parser.add_argument('--adflow-relative-tolerance', type=float, default=1e-8)
+parser.add_argument('--hisa-restart-fields', type=Path)
+parser.add_argument('--hisa-cfl', type=float, default=5.)
 args = parser.parse_args()
+if args.hisa_cfl <= 0:
+    parser.error('--hisa-cfl must be positive')
 root = args.root.resolve()
 work = args.output.resolve()
 work.mkdir(parents=True, exist_ok=False)
 
 if args.solver == 'hisa':
     template = root / 'dafoam_case/validation/dafoam_L3_firstorder_2000/cfl5_0'
-    for folder in ['constant', 'system', '0']:
+    for folder in ['constant', 'system']:
         shutil.copytree(template / folder, work / folder)
+    fields = args.hisa_restart_fields.resolve() if args.hisa_restart_fields else template / '0'
+    shutil.copytree(fields, work / '0',
+                    ignore=shutil.ignore_patterns('uniform', 'pseudoCo*')
+                    if args.hisa_restart_fields else None)
+    path = work / 'system/fvSolution'
+    text, count = re.subn(r'(?m)^(\s*pseudoCoNum\s+)[^;]+;',
+                          lambda m: m[1] + str(args.hisa_cfl) + ';', path.read_text())
+    assert count == 1
+    path.write_text(text)
     path = work / 'system/controlDict'
     text = path.read_text()
     for key in ['endTime', 'writeInterval']:
@@ -43,6 +56,12 @@ if args.solver == 'hisa':
     cmd = [sys.executable, str(root / 'Hisa4DAFoam/tests/wingAero/run_case.py'),
            '--case', str(work), '--library-dir',
            str(root / 'dafoam_case/validation/hisa_direction_build/lib'), '--alpha', '2']
+    if args.hisa_restart_fields:
+        cmd.append('--restart')
+    (work / 'run_config.json').write_text(json.dumps({
+        'flux': args.hisa_flux, 'cfl': args.hisa_cfl,
+        'restart_fields': str(fields), 'restart': bool(args.hisa_restart_fields),
+        'command': cmd}, indent=2) + '\n')
     result = subprocess.run(cmd, check=False)
     sys.exit(result.returncode)
 
