@@ -1,0 +1,23 @@
+{
+  "case": "/mdouser/test_aerostructure/reports/hisa_airfoil_baseline/current_rae2822/simulation",
+  "library": "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so",
+  "library_sha256": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be",
+  "cells": 23552,
+  "iterations": 1250,
+  "native_converged": false,
+  "last_normalized_outer_max": 0.00556942,
+  "last_force_time": 1250.0,
+  "CD": 0.01383583,
+  "CL": 0.690557,
+  "last_100_steps_CD_range": [
+    0.01376274,
+    0.01386207
+  ],
+  "last_100_steps_CL_range": [
+    0.690514,
+    0.6905725
+  ],
+  "last_timing": "ExecutionTime = 156.79 s  ExecutionStepTime = 0.12 s  ClockTime = 165 s",
+  "final_log_has_End": true,
+  "external_accuracy_validated": false
+}
