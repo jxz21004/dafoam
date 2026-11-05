@@ -1,0 +1,78 @@
+{
+  "adflow": {
+    "solver": "adflow",
+    "alpha": 2.0,
+    "rigid": true,
+    "mpi_ranks": 1,
+    "functions": {
+      "rigid2_cd": 0.03619010881696439,
+      "rigid2_cl": 0.4151687564468102
+    },
+    "setup_seconds": 0.19686819300022762,
+    "solve_seconds": 9.352306204999877,
+    "resnorm_initial_start_final": [
+      378899.83572492364,
+      378899.83572492364,
+      5.896087655711122e-05
+    ],
+    "final_over_initial": 1.5561072082363226e-10,
+    "solve_failed": false,
+    "fatal_fail": false,
+    "freestream": {
+      "P": 26499.89786492552,
+      "T": 223.25209264797854,
+      "rho": 0.4135077547001529,
+      "V": 254.60282277566375,
+      "mu": 1.457509949442243e-05,
+      "nu": 3.524746350885555e-05,
+      "q": 13402.323345186078
+    },
+    "module": "/mdouser/test_aerostructure/adflow/build-local/python/adflow/__init__.py",
+    "source_sha256": "47bdc2ddd52880fa263d31d803005d9d5f17a228acbea7684179a36c51d22b15"
+  },
+  "hisa": {
+    "alpha": 2.0,
+    "primal_fail": 0,
+    "raw_residual_max": 0.09449248011409975,
+    "raw_residual_l2": 0.40609404487533607,
+    "primal_seconds": 39.42050871799984,
+    "cells": 3024,
+    "primal_iterations": 2172,
+    "temperature_min": 201.31706588616953,
+    "temperature_max": 299.72664853336164,
+    "functions": {
+      "cd": 0.16378032799731235,
+      "cl": 0.2904746806997825
+    },
+    "loaded_libraries": {
+      "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolverADR.so": "cb6db65c842e16be755231bbc493a75000b00f98766504959a1f636e98a26756",
+      "/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib/libHisaSolver.so": "964a1065bf44fcd46305726113ff40e82c0a1e66d5036edc03437454e36e15be"
+    },
+    "loaded_dafoam_libraries": {
+      "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolverADR.so": "64c7f34a98f0ccfb7f3932e7adce07dfad98fc1d0cd9d145c8f7e58a85dcdbb3",
+      "/mdouser/test_aerostructure/dafoam/build/hisa-diagnostics/lib/libDASolver.so": "27e0b5c511282dbc9bf6053002c9d69207e90399437c769f38363b59334f8f73"
+    },
+    "accepted": false,
+    "gradient_verified": false,
+    "initialization": "uniform freestream",
+    "adjoint_settings_configured_but_not_run": {
+      "gmresRestart": 100,
+      "gmresMaxIters": 2000,
+      "gmresRelTol": 1e-08,
+      "gmresAbsTol": 1e-13,
+      "pcFillLevel": 1,
+      "jacMatReOrdering": "rcm",
+      "asmOverlap": 1,
+      "hisaPCFlux": 1,
+      "hisaForceJSTFlux": 0,
+      "hisaRemoveTauMCOff": 1
+    },
+    "initial_raw_residual_l2": 17060395.312238056,
+    "fixed_definition_relative_l2": 2.3803319761531533e-08
+  },
+  "adflow_outer_iterations": 60,
+  "hisa_native_iterations": 2171,
+  "hisa_native_normalized_max": 9.935555740690903e-09,
+  "hisa_cd_over_adflow": 4.525555002491152,
+  "hisa_cl_relative_difference": -0.3003455192876563
+}
