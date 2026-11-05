@@ -2,6 +2,7 @@
 """Run an isolated alpha=2 L3 rigid case with the existing solver settings."""
 import argparse
 import ast
+import gzip
 import hashlib
 import json
 import os
@@ -19,6 +20,7 @@ parser.add_argument('--solver', choices=['adflow', 'hisa'], required=True)
 parser.add_argument('--hisa-flux', choices=['AUSMPlusUp', 'JST'], default='AUSMPlusUp')
 parser.add_argument('--adflow-relative-tolerance', type=float, default=1e-8)
 parser.add_argument('--hisa-restart-fields', type=Path)
+parser.add_argument('--hisa-adiabatic', action='store_true')
 parser.add_argument('--hisa-cfl', type=float, default=5.)
 args = parser.parse_args()
 if args.hisa_cfl <= 0:
@@ -35,6 +37,19 @@ if args.solver == 'hisa':
     shutil.copytree(fields, work / '0',
                     ignore=shutil.ignore_patterns('uniform', 'pseudoCo*')
                     if args.hisa_restart_fields else None)
+    if args.hisa_adiabatic:
+        path = work / '0/T'
+        compressed = not path.exists()
+        if compressed:
+            path = path.with_suffix('.gz')
+        opener = gzip.open if compressed else open
+        with opener(path, 'rt') as stream:
+            text = stream.read()
+        text, count = re.subn(r'(?m)(^\s*wing\s*\n\s*\{)[^}]*}',
+                              r'\1\n        type zeroGradient;\n    }', text)
+        assert count == 1
+        with opener(path, 'wt') as stream:
+            stream.write(text)
     path = work / 'system/fvSolution'
     text, count = re.subn(r'(?m)^(\s*pseudoCoNum\s+)[^;]+;',
                           lambda m: m[1] + str(args.hisa_cfl) + ';', path.read_text())
@@ -60,6 +75,7 @@ if args.solver == 'hisa':
         cmd.append('--restart')
     (work / 'run_config.json').write_text(json.dumps({
         'flux': args.hisa_flux, 'cfl': args.hisa_cfl,
+        'adiabatic_wall': args.hisa_adiabatic,
         'restart_fields': str(fields), 'restart': bool(args.hisa_restart_fields),
         'command': cmd}, indent=2) + '\n')
     result = subprocess.run(cmd, check=False)
