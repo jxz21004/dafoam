@@ -1,0 +1,34 @@
+  GMRES iteration: 0   Residual: 2.43454951026e-08 (5.27482678232e-09 7.00706883572e-19 1.07858374575e-08) 2.0065140955e-08    Krylov steps: 0
+  GMRES iteration: 1   Residual: 2.06952778028e-09 (1.63266619306e-10 0 1.70950967239e-10) 5.44597145472e-10    Krylov steps: 3
+smoothSolver:  Solving for nuTilda, Initial residual = 2.53546434754e-11, Final residual = 2.7450668279e-12, No Iterations 1
+ExecutionTime = 565.31 s  ExecutionStepTime = 0.12 s  ClockTime = 592 s
+
+Time = 3999
+
+pseudoTime: iteration 3999
+Pseudo Courant No: 5000
+Damped pseudo Courant No: Min: 5000 Mean: 5000 Max: 5000
+Pseudo deltaT: Min: 2.73999770892e-05 Mean: 0.0899040506704 Max: 12.0042306449
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 2.35348437146e-08 (5.18550509033e-09 7.00706890608e-19 1.05790108506e-08) 1.92070385909e-08    Krylov steps: 0
+  GMRES iteration: 1   Residual: 2.09659097118e-09 (1.54348255687e-10 0 1.77670572877e-10) 5.57576896804e-10    Krylov steps: 3
+smoothSolver:  Solving for nuTilda, Initial residual = 2.53602272835e-11, Final residual = 2.74762144726e-12, No Iterations 1
+ExecutionTime = 565.41 s  ExecutionStepTime = 0.1 s  ClockTime = 592 s
+
+Time = 4000
+
+pseudoTime: iteration 4000
+Pseudo Courant No: 5000
+Damped pseudo Courant No: Min: 5000 Mean: 5000 Max: 5000
+Pseudo deltaT: Min: 2.73999770896e-05 Mean: 0.08990405067 Max: 12.0042306448
+Solving for (rho rhoU rhoE)
+  GMRES iteration: 0   Residual: 2.37357859549e-08 (5.08901454317e-09 7.00706883018e-19 1.03911270489e-08) 1.95303306026e-08    Krylov steps: 0
+  GMRES iteration: 1   Residual: 2.11757191732e-09 (1.71791168237e-10 0 1.83952790014e-10) 5.8310384908e-10    Krylov steps: 3
+smoothSolver:  Solving for nuTilda, Initial residual = 2.51095559696e-11, Final residual = 2.72640443434e-12, No Iterations 1
+ExecutionTime = 565.61 s  ExecutionStepTime = 0.2 s  ClockTime = 593 s
+
+writeObjects residualFields write:
+    writing object rhoER
+    writing object rhoR
+    writing object rhoUR
+End
