@@ -1,9 +1,0 @@
-boundaryField
-{
-    wing
-    {
-        type            zeroGradient;
-    }
-    inout
-    {
-        t

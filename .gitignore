@@ -29,3 +29,9 @@ reg_test_files*
 tests/*.txt
 tests/*.txt.orig
 .vscode/
+
+# Local generated validation artifacts
+__pycache__/
+*.py[cod]
+/reports/
+/runs/

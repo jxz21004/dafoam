@@ -1,2 +1,0 @@
-EXE_INC = -I/mdouser/test_aerostructure/Hisa4DAFoam/src/finiteVolume/fluxSchemes/fluxScheme -I$(LIB_SRC)/transportModels/compressible/lnInclude -I$(LIB_SRC)/finiteVolume/lnInclude -I$(LIB_SRC)/meshTools/lnInclude -I$(LIB_SRC)/thermophysicalModels/basic/lnInclude -I$(LIB_SRC)/thermophysicalModels/specie/lnInclude
-EXE_LIBS = -L/mdouser/test_aerostructure/dafoam_case/validation/hisa_direction_build/lib -lHisaSolver -lfiniteVolume -lmeshTools -lfluidThermophysicalModels -lspecie
