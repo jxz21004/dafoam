@@ -1,0 +1,12 @@
+{
+  "CL": {
+    "first_order": 0.70732606882,
+    "wVanLeer": 0.7779857069855,
+    "relative_difference": -0.09082382559351676
+  },
+  "CD": {
+    "first_order": 0.0462703668678,
+    "wVanLeer": 0.01912027599625,
+    "relative_difference": 1.4199633350938479
+  }
+}
