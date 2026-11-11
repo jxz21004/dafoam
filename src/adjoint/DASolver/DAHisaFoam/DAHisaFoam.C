@@ -28,6 +28,7 @@
 \*---------------------------------------------------------------------------*/
 
 #include "DAHisaFoam.H"
+#include "wallDist.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,6 +67,19 @@ void DAHisaFoam::initSolver()
     solverModule& solver = hisaSolverPtr_();
 
     solver.initialise();
+
+    // v2506 wallDist owns an unregistered yWall field. Expose that same
+    // live field to the DAFoam turbulence adapter, without copying/fixing it.
+    // Its mesh-motion updates and active coordinate derivatives are retained.
+    if (!mesh.foundObject<volScalarField>("yWall"))
+    {
+        volScalarField& distance =
+            const_cast<volScalarField&>(wallDist::New(mesh).y());
+        if (!distance.checkIn())
+            FatalErrorInFunction << "Cannot register wallDist field for DAHisaFoam"
+                                 << exit(FatalError);
+    }
+
 
     // read the RAS model from constant/turbulenceProperties
     const word turbModelName(
