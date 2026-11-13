@@ -44,6 +44,7 @@ label DAHisaFoam::solveHybrid()
         FatalErrorInFunction<<"Invalid hisaHybrid thresholds or iteration limits"<<exit(FatalError);
     hisaNK::Options opts;opts.subspace=cfg.lookupOrDefault<label>("nkSubspace",60);opts.maxLinear=cfg.lookupOrDefault<label>("nkMaxLinearIterations",60);
     opts.overlap=cfg.lookupOrDefault<label>("nkASMOverlap",1);opts.fill=cfg.lookupOrDefault<label>("nkILUFill",2);opts.lag=cfg.lookupOrDefault<label>("nkJacobianLag",20);opts.rtol=cfg.lookupOrDefault<scalar>("nkLinearTol",.3);opts.ew=cfg.lookupOrDefault<bool>("nkUseEW",true);
+    opts.stagnationTol=cfg.lookupOrDefault<scalar>("nkLinearStagnationTol",.99);
     const dictionary scaling=daOptionPtr_->getAllOptions().subDict("normalizeStates");
     scalarList scales(4);wordList names(4);names[0]="U";names[1]="p";names[2]="T";names[3]="nuTilda";
     forAll(scales,i) {scales[i]=scaling.get<scalar>(names[i]);if(scales[i]<=0)FatalErrorInFunction<<"Invalid state scale"<<exit(FatalError);}
@@ -70,10 +71,23 @@ label DAHisaFoam::solveHybrid()
     if(!std::isfinite(initialTotal)||initialTotal<0) FatalErrorInFunction<<"Invalid total residual baseline"<<exit(FatalError);
     label ptcCount=iter-nkCount;
     if(ptcCount<0) FatalErrorInFunction<<"Invalid checkpoint iteration counts"<<exit(FatalError);
+    const dictionary pseudo=meshPtr_->solutionDict().subDict("pseudoTime");
+    const dictionary flow=meshPtr_->solutionDict().subDict("flowSolver");
+    if(pseudo.lookupOrDefault<bool>("resetPseudo",false) || flow.subOrEmptyDict("GMRES").lookupOrDefault<bool>("limitedUpdate",false))
+        FatalErrorInFunction<<"Hybrid total-residual CFL requires resetPseudo=false and limitedUpdate=false; avoid competing CFL controllers"<<exit(FatalError);
+    scalar initialCFL=pseudo.lookupOrDefault<scalar>("pseudoCoNum",1);
+    if(!reset && saved.found("initialCFL")) initialCFL=saved.get<scalar>("initialCFL");
+    if(!std::isfinite(initialCFL)||initialCFL<=0) FatalErrorInFunction<<"Invalid initial CFL"<<exit(FatalError);
+    uniformDimensionedScalarField hybridRelativeResidual(
+        IOobject("hybridRelativeResidual",time.timeName(),meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE),
+        dimensionedScalar("relative",dimless,1));
+    uniformDimensionedScalarField hybridInitialCFL(
+        IOobject("hybridInitialCFL",time.timeName(),meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE),
+        dimensionedScalar("initialCFL",dimless,initialCFL));
     bool colored=false;
     auto pcMatrix=[&](){Quiet q(!detailed);residual(z);if(!colored){runColoring();colored=true;}Mat m;hisaNK::check(MatCreate(PETSC_COMM_WORLD,&m));calcdRdWT(1,m);hisaNK::check(MatTranspose(m,MAT_INPLACE_MATRIX,&m));return m;};
     std::unique_ptr<hisaNK::Solver> nk(new hisaNK::Solver(opts,weights,residual,admissible,pcMatrix));
-    auto persist=[&](const word&status){IOdictionary out(IOobject("hisaHybridState",time.timeName(),"uniform",meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE,false));out.add("initialResidual",initial);out.add("initialTotalResidual",initialTotal);out.add("ptcIteration",ptcCount);out.add("stateScales",scales);out.add("globalCells",returnReduce(nc,sumOp<label>()));out.add("outerIteration",iter);out.add("nkIteration",nkCount);out.add("stage",stage);out.add("recoverySteps",recovery);out.add("status",status);out.regIOobject::write();};
+    auto persist=[&](const word&status){IOdictionary out(IOobject("hisaHybridState",time.timeName(),"uniform",meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE,false));out.add("initialResidual",initial);out.add("initialTotalResidual",initialTotal);out.add("initialCFL",initialCFL);out.add("ptcIteration",ptcCount);out.add("stateScales",scales);out.add("globalCells",returnReduce(nc,sumOp<label>()));out.add("outerIteration",iter);out.add("nkIteration",nkCount);out.add("stage",stage);out.add("recoverySteps",recovery);out.add("status",status);out.regIOobject::write();};
     Info<<"Hybrid initialResidual "<<initial<<" initialTotalResidual "<<initialTotal<<" cumulative iteration "<<iter<<" stage "<<stage<<endl;
     word status="maxIterations";hisaNK::Result linear;
     while(true){scalarList values=norms(r);
@@ -82,6 +96,7 @@ label DAHisaFoam::solveHybrid()
         const double ab=hisaNK::norm(scaled);
         const double rel=ab/std::max(initialTotal,1e-30);
         if(!std::isfinite(ab)) FatalErrorInFunction<<"Nonfinite hybrid residual"<<exit(FatalError);
+        hybridRelativeResidual.value()=rel;
         const bool converged=(ab<=absTol || rel<=finalTol);
         if(iter%interval==0||converged||iter>=maxOuter) {
             Info<<"Hybrid "<<iter<<' '<<stage;
@@ -111,6 +126,8 @@ label DAHisaFoam::solveHybrid()
         ++iter;
         if(stage=="NK"){
             ++nkCount;linear=nk->step(z);r=residual(z);
+            if(linear.retries) Info<<"Hybrid NK PC rebuilt after linear stagnation: firstLinRel "<<linear.firstLinear<<" retryLinRel "<<linear.linear<<" totalKSP "<<linear.iterations<<endl;
+            if(linear.stagnated) Info<<"Hybrid NK linear solve still stagnant after rebuild; restoring base state and returning to PTC"<<endl;
             if(!linear.accepted){Info<<"Hybrid NK -> PTC: rejected update, KSP reason "<<linear.reason<<endl;stage="PTC";recovery=0;nk->restart();}
         }else{
             {Quiet q(!detailed);solver.beginTimeStep();if(!solver.solnControl().loop())FatalErrorInFunction<<"PTC stopped before hybrid controller"<<exit(FatalError);solver.outerIteration();daTurbulenceModelPtr_->correct(detailed);}
