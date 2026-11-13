@@ -65,6 +65,8 @@ public:
 
     /// solve the primal equations
     virtual label solvePrimal();
+
+    label solveHybrid();
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

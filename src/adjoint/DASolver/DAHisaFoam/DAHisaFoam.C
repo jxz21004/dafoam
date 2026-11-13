@@ -105,6 +105,9 @@ label DAHisaFoam::solvePrimal()
         Call the primal solver to get converged state variables
     */
 
+    if (meshPtr_->solutionDict().subOrEmptyDict("hisaHybrid").lookupOrDefault<bool>("enabled", false))
+        return solveHybrid();
+
     Info << "Running HiSA " << endl;
 
     solverModule& solver = hisaSolverPtr_();
