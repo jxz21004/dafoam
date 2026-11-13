@@ -87,6 +87,8 @@ label DAHisaFoam::solveHybrid()
     bool colored=false;
     auto pcMatrix=[&](){Quiet q(!detailed);residual(z);if(!colored){runColoring();colored=true;}Mat m;hisaNK::check(MatCreate(PETSC_COMM_WORLD,&m));calcdRdWT(1,m);hisaNK::check(MatTranspose(m,MAT_INPLACE_MATRIX,&m));return m;};
     std::unique_ptr<hisaNK::Solver> nk(new hisaNK::Solver(opts,weights,residual,admissible,pcMatrix));
+    const label solveStartIteration = iter;
+    const label minimumNewIterations = freestreamCorrected_ ? max(label(1),daOptionPtr_->getOption<label>("primalMinIters")) : 0;
     auto persist=[&](const word&status){IOdictionary out(IOobject("hisaHybridState",time.timeName(),"uniform",meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE,false));out.add("initialResidual",initial);out.add("initialTotalResidual",initialTotal);out.add("initialCFL",initialCFL);out.add("ptcIteration",ptcCount);out.add("stateScales",scales);out.add("globalCells",returnReduce(nc,sumOp<label>()));out.add("outerIteration",iter);out.add("nkIteration",nkCount);out.add("stage",stage);out.add("recoverySteps",recovery);out.add("status",status);out.regIOobject::write();};
     Info<<"Hybrid initialResidual "<<initial<<" initialTotalResidual "<<initialTotal<<" cumulative iteration "<<iter<<" stage "<<stage<<endl;
     word status="maxIterations";hisaNK::Result linear;
@@ -97,7 +99,7 @@ label DAHisaFoam::solveHybrid()
         const double rel=ab/std::max(initialTotal,1e-30);
         if(!std::isfinite(ab)) FatalErrorInFunction<<"Nonfinite hybrid residual"<<exit(FatalError);
         hybridRelativeResidual.value()=rel;
-        const bool converged=(ab<=absTol || rel<=finalTol);
+        const bool converged=(ab<=absTol || rel<=finalTol) && iter-solveStartIteration >= minimumNewIterations;
         if(iter%interval==0||converged||iter>=maxOuter) {
             Info<<"Hybrid "<<iter<<' '<<stage;
             if(show("relative")) Info<<" relative "<<rel;

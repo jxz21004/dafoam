@@ -1,0 +1,17 @@
+--- a/src/finiteVolume/finiteVolume/snGradSchemes/limitedSnGrad/limitedSnGrad.H
++++ b/src/finiteVolume/finiteVolume/snGradSchemes/limitedSnGrad/limitedSnGrad.H
+@@ -144,8 +144,12 @@
+         limitedSnGrad(const fvMesh& mesh, Istream& schemeData)
+         :
+             snGradScheme<Type>(mesh),
+-            correctedScheme_(lookupCorrectedScheme(schemeData))
+-        {
++            correctedScheme_(nullptr),
++            limitCoeff_(1)
++        {
++            // Read only after limitCoeff_ has been constructed. Active scalar
++            // default construction otherwise overwrites the parsed coefficient.
++            correctedScheme_ = lookupCorrectedScheme(schemeData);
+             if (limitCoeff_ < 0 || limitCoeff_ > 1)
+             {
+                 FatalIOErrorInFunction(schemeData)

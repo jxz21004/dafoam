@@ -29,6 +29,10 @@
 
 #include "DAHisaFoam.H"
 #include "wallDist.H"
+#include "characteristicBase.H"
+#include "fluidThermo.H"
+#include "transform.H"
+#include <cmath>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -96,6 +100,109 @@ void DAHisaFoam::initSolver()
     daTurbulenceModelPtr_.reset(DATurbulenceModel::New(turbModelName, mesh, daOptionPtr_()));
 
 #include "createAdjoint.H"
+    haveFreestream_ = readFreestream(previousFreestream_, previousFreestreamP_, previousFreestreamT_);
+}
+
+// Sample actual restart boundary references, not the uniform 0/ initial field.
+// All ranks participate, including ranks with no farfield faces.
+bool DAHisaFoam::readFreestream(vector& velocity, scalar& pressure, scalar& temperature)
+{
+    const auto& U = meshPtr_->lookupObject<volVectorField>("U");
+    vector sumU = vector::zero;
+    scalar sumP = 0, sumT = 0, count = 0;
+    forAll(U.boundaryField(), patchI)
+    {
+        const auto& patch = U.boundaryField()[patchI];
+        if (patch.type() != "characteristicFarfieldVelocity" || !patch.size()) continue;
+        const auto& ref = refCast<const characteristicBase>(patch);
+        scalar n = patch.size();
+        sumU += n * ref.URef(); sumP += n * ref.pRef(); sumT += n * ref.TRef(); count += n;
+    }
+    reduce(sumU, sumOp<vector>()); reduce(sumP, sumOp<scalar>());
+    reduce(sumT, sumOp<scalar>()); reduce(count, sumOp<scalar>());
+    if (!count) return false;
+    velocity = sumU/count; pressure = sumP/count; temperature = sumT/count;
+    scalar spread = 0;
+    forAll(U.boundaryField(), patchI)
+    {
+        const auto& patch = U.boundaryField()[patchI];
+        if (patch.type() != "characteristicFarfieldVelocity" || !patch.size()) continue;
+        const auto& ref = refCast<const characteristicBase>(patch);
+        spread = max(spread, mag(ref.URef()-velocity));
+    }
+    reduce(spread, maxOp<scalar>());
+    if (spread > 1e-10*max(mag(velocity),scalar(1)))
+        FatalErrorInFunction << "Freestream correction requires a uniform farfield velocity" << exit(FatalError);
+    return true;
+}
+
+void DAHisaFoam::correctFreestreamInitialGuess()
+{
+    freestreamCorrected_ = false;
+#if !defined(CODI_ADR) && !defined(CODI_ADF)
+    const auto& options = daOptionPtr_->getAllOptions();
+    const bool enabled = options.get<bool>("infChangeCorrection");
+    const scalar tolerance = options.get<scalar>("infChangeCorrectionTol");
+    const word method = options.get<word>("infChangeCorrectionType");
+    if (!std::isfinite(tolerance) || tolerance < 0 || (method != "offset" && method != "rotate"))
+        FatalErrorInFunction << "Invalid infChangeCorrectionTol/Type (offset or rotate)" << exit(FatalError);
+    vector next; scalar p, T;
+    if (!readFreestream(next,p,T)) return;
+    if (enabled && haveFreestream_)
+    {
+        // Current support is patchVelocity (speed/AoA) at fixed p,T.
+        // Do not silently claim a general thermodynamic-state correction.
+        if (mag(p-previousFreestreamP_) > 1e-10*max(p,scalar(1)) ||
+            mag(T-previousFreestreamT_) > 1e-10*max(T,scalar(1)))
+            FatalErrorInFunction << "infChangeCorrection currently supports velocity changes at fixed farfield p,T. Disable it for thermodynamic changes." << exit(FatalError);
+        auto& thermo = meshPtr_->lookupObject<fluidThermo>("thermophysicalProperties");
+        // ADflow uRef=sqrt(pInf/rhoInf)=sqrt(R*TInf), for the ideal gas.
+        tmp<volScalarField> gas = thermo.Cp()-thermo.Cv();
+        scalar gasR = gAverage(gas().primitiveField());
+        scalar scale2 = gasR*T;
+        if (scale2 <= 0) FatalErrorInFunction << "Invalid freestream velocity scale" << exit(FatalError);
+        vector delta = next-previousFreestream_;
+        scalar deltaEnergy = 0.5*(magSqr(next)-magSqr(previousFreestream_))/scale2;
+        scalar change = sqrt(magSqr(delta)/scale2 + sqr(deltaEnergy));
+        if (change > 0 && change >= tolerance)
+        {
+            auto& U = meshPtr_->lookupObjectRef<volVectorField>("U");
+            const vectorField oldVelocity(U.primitiveField());
+            if (method == "offset") U.primitiveFieldRef() += delta;
+            else
+            {
+                scalar oldSpeed=mag(previousFreestream_), newSpeed=mag(next);
+                if (oldSpeed <= SMALL || newSpeed <= SMALL)
+                    FatalErrorInFunction << "rotate requires nonzero old/new speed; use offset" << exit(FatalError);
+                tensor rotation = rotationTensor(previousFreestream_/oldSpeed,next/newSpeed);
+                forAll(U,cellI) U[cellI] = (newSpeed/oldSpeed)*(rotation & U[cellI]);
+            }
+            // ADflow stores rho,u,v,w,rhoE. Preserve density and add the
+            // freestream total-energy increment; convert back to p,T.
+            auto& temperature = meshPtr_->lookupObjectRef<volScalarField>("T");
+            auto& pressure = meshPtr_->lookupObjectRef<volScalarField>("p");
+            tmp<volScalarField> cv = thermo.Cv();
+            forAll(U,cellI)
+            {
+                scalar oldT = temperature[cellI];
+                scalar rhoInfOverRho = (p/T)*(oldT/pressure[cellI]);
+                scalar dEnergy = rhoInfOverRho*deltaEnergy*scale2
+                    - 0.5*(magSqr(U[cellI])-magSqr(oldVelocity[cellI]));
+                scalar newT = oldT + dEnergy/cv()[cellI];
+                if (newT <= 0 || !std::isfinite(newT))
+                    FatalErrorInFunction << "Freestream correction gives nonpositive T; disable it or reduce the condition change" << exit(FatalError);
+                temperature[cellI] = newT;
+                pressure[cellI] *= newT/oldT;
+            }
+            U.correctBoundaryConditions();
+            temperature.correctBoundaryConditions(); pressure.correctBoundaryConditions();
+            freestreamCorrected_ = true;
+            Info << "Freestream initial-guess correction: " << method << " deltaU " << delta
+                 << " nondimensionalChange " << change << " tolerance " << tolerance << endl;
+        }
+    }
+    previousFreestream_=next; previousFreestreamP_=p; previousFreestreamT_=T; haveFreestream_=true;
+#endif
 }
 
 label DAHisaFoam::solvePrimal()
@@ -104,6 +211,8 @@ label DAHisaFoam::solvePrimal()
     Description:
         Call the primal solver to get converged state variables
     */
+
+    correctFreestreamInitialGuess();
 
     if (meshPtr_->solutionDict().subOrEmptyDict("hisaHybrid").lookupOrDefault<bool>("enabled", false))
         return solveHybrid();

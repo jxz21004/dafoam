@@ -28,6 +28,7 @@
 \*---------------------------------------------------------------------------*/
 
 #include "DASpalartAllmaras.H"
+#include <cstdlib>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -456,6 +457,36 @@ void DASpalartAllmaras::calcResiduals(const dictionary& options)
             - Cb2_ / sigmaNut_ * phase_ * rho * magSqr(fvc::grad(nuTilda_))
         == Cb1_ * phase_ * rho * Stilda * nuTilda_ * betaFINuTilda_
             - fvm::Sp(Cw1_ * phase_ * rho * fw(Stilda) * nuTilda_ / sqr(y_), nuTilda_));
+
+    // Opt-in one-shot residual decomposition for native/ADR parity audits.
+    // No diagnostic fields are created in normal solver/adjoint runs.
+    static bool auditWritten = false;
+    if (std::getenv("DAFOAM_SA_AUDIT") && !auditWritten && !solveTurbState_)
+    {
+        auditWritten = true;
+#ifdef CODI_ADR
+        const word suffix("ADR");
+#else
+        const word suffix("native");
+#endif
+        const volScalarField omega(::sqrt(2.0)*mag(skew(fvc::grad(U_))));
+        const volScalarField wallFunction(fw(Stilda));
+        const volScalarField conv(fvm::div(phaseRhoPhi_,nuTilda_,divNuTildaScheme) & nuTilda_);
+        const volScalarField diffusion(fvm::laplacian(phase_*rho*DnuTildaEff(),nuTilda_) & nuTilda_);
+        const volScalarField gradTerm(Cb2_/sigmaNut_*phase_*rho*magSqr(fvc::grad(nuTilda_)));
+        const volScalarField production(Cb1_*phase_*rho*Stilda*nuTilda_*betaFINuTilda_);
+        const volScalarField destruction(Cw1_*phase_*rho*wallFunction*sqr(nuTilda_)/sqr(y_));
+        const volScalarField raw(nuTildaEqn.ref() & nuTilda_);
+        OFstream os(mesh_.time().path()/word("saAudit_"+suffix+".csv"));
+        os.precision(17);
+        os << "cell,volume,chi,fv1,omega,Stilda,fw,conv,diffusion,gradTerm,production,destruction,raw,beta" << nl;
+        forAll(nuTilda_,i)
+            os << i << ',' << mesh_.V()[i] << ',' << chi[i] << ',' << fv1[i]
+               << ',' << omega[i] << ',' << Stilda[i] << ',' << wallFunction[i]
+               << ',' << conv[i] << ',' << diffusion[i] << ',' << gradTerm[i]
+               << ',' << production[i] << ',' << destruction[i] << ',' << raw[i]
+               << ',' << betaFINuTilda_[i] << nl;
+    }
 
     nuTildaEqn.ref().relax();
 

@@ -111,6 +111,12 @@ class DAOPTION(object):
         ## }
         self.primalInitCondition = {}
 
+        # DAHisaFoam: ADflow-style warm-start correction for changed farfield
+        # velocity. Applied once before primal solve, never in AD residuals.
+        self.infChangeCorrection = True
+        self.infChangeCorrectionTol = 1e-12
+        self.infChangeCorrectionType = "offset"
+
         ## State normalization for dRdWT computation. Typically, we set far field value for each state
         ## variable. NOTE: If you forget to set normalization value for a state variable, the adjoint
         ## may not converge or it may be inaccurate! For "phi", use 1.0 to normalization

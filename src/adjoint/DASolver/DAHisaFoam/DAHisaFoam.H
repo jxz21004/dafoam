@@ -40,6 +40,13 @@ class DAHisaFoam
 protected:
     autoPtr<solverModule> hisaSolverPtr_;
 
+    vector previousFreestream_ = vector::zero;
+    scalar previousFreestreamP_ = 0, previousFreestreamT_ = 0;
+    bool haveFreestream_ = false;
+    bool freestreamCorrected_ = false;
+    bool readFreestream(vector& velocity, scalar& pressure, scalar& temperature);
+    void correctFreestreamInitialGuess();
+
     /// turbulence pointer
     autoPtr<compressible::turbulenceModel> turbulencePtr_;
 
