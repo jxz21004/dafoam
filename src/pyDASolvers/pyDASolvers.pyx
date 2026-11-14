@@ -50,6 +50,7 @@ cdef extern from "DASolvers.H" namespace "Foam":
         void runColoring()
         void calcJacTVecProduct(char *, char *, double *, char *, char *, double *, double *)
         void getResiduals(double *)
+        void calcResiduals(int)
         int getInputSize(char *, char *)
         int getOutputSize(char *, char *)
         void calcOutput(char *, char *, double *)
@@ -182,6 +183,12 @@ cdef class pyDASolvers:
             inputs_data,
             seeds_data)
     
+    def calcResiduals(self, int isPC=0):
+        """Update residual fields; isPC=1 evaluates the preconditioner residual."""
+        if isPC not in (0, 1):
+            raise ValueError("isPC must be 0 or 1")
+        self._thisptr.calcResiduals(isPC)
+
     def getResiduals(self, np.ndarray[double, ndim=1, mode="c"] residuals):
         
         assert len(residuals) == self.getNLocalAdjointStates(), "invalid input array size!"

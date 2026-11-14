@@ -376,13 +376,32 @@ label DALinearEqn::solveLinearEqn(
     //Print convergence information
     label its;
     KSPGetIterationNumber(ksp, &its);
-    PetscScalar initResNorm = rGMRESHist[0];
-    PetscScalar finalResNorm = rGMRESHist[its];
+    // A breakdown need not append a history entry for the last iteration.
+    // Never index the history by the iteration count.
+    const PetscReal* residualHistory = nullptr;
+    PetscInt historyLength = 0;
+    KSPGetResidualHistory(ksp, &residualHistory, &historyLength);
+    PetscReal initResNorm = 0;
+    if (historyLength > 0)
+        initResNorm = residualHistory[0];
+    else
+        VecNorm(rhsVec, NORM_2, &initResNorm);
+
+    // Validate the actual equation, including after a failed Krylov solve.
+    Mat operatorMat;
+    KSPGetOperators(ksp, &operatorMat, nullptr);
+    Vec trueResidual;
+    VecDuplicate(rhsVec, &trueResidual);
+    MatMult(operatorMat, solVec, trueResidual);
+    VecAYPX(trueResidual, -1.0, rhsVec);
+    PetscReal finalResNorm = 0;
+    VecNorm(trueResidual, NORM_2, &finalResNorm);
+    VecDestroy(&trueResidual);
     KSPConvergedReason reason;
     KSPGetConvergedReason(ksp, &reason);
     PetscPrintf(
         PETSC_COMM_WORLD,
-        "Main iteration %D KSP Residual norm %14.12e %.2f s \n",
+        "Main iteration %D true linear residual norm %14.12e %.2f s \n",
         its,
         finalResNorm,
         this->getRunTime());
@@ -418,9 +437,15 @@ label DALinearEqn::solveLinearEqn(
     VecAssemblyEnd(solVec);
 
     // now we need to check if the linear equation solution is successful
+    if (reason <= 0 || PetscIsInfOrNanReal(finalResNorm) || PetscIsInfOrNanReal(initResNorm))
+    {
+        Info << "Linear solver failed: PETSc reason " << reason
+             << ", true residual " << finalResNorm << endl;
+        return 1;
+    }
 
     scalar absResRatio = finalResNorm / daOption_.getSubDictOption<scalar>("adjEqnOption", "gmresAbsTol");
-    scalar relResRatio = finalResNorm / initResNorm / daOption_.getSubDictOption<scalar>("adjEqnOption", "gmresRelTol");
+    scalar relResRatio = finalResNorm / (initResNorm > 0 ? initResNorm : 1.0e-300) / daOption_.getSubDictOption<scalar>("adjEqnOption", "gmresRelTol");
     scalar resDiff = daOption_.getSubDictOption<scalar>("adjEqnOption", "gmresTolDiff");
     if (relResRatio > resDiff && absResRatio > resDiff)
     {

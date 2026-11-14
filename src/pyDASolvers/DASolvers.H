@@ -72,6 +72,13 @@ public:
         DASolverPtr_->getResiduals(residuals);
     }
 
+    /// Evaluate residual fields, including the preconditioner residual for audits.
+    void calcResiduals(label isPC)
+    {
+        DASolverPtr_->updateStateBoundaryConditions();
+        DASolverPtr_->calcResiduals(isPC);
+    }
+
     label getInputSize(
         const word inputName,
         const word inputType)

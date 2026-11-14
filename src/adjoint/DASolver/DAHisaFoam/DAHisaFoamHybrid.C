@@ -45,6 +45,13 @@ label DAHisaFoam::solveHybrid()
     hisaNK::Options opts;opts.subspace=cfg.lookupOrDefault<label>("nkSubspace",60);opts.maxLinear=cfg.lookupOrDefault<label>("nkMaxLinearIterations",60);
     opts.overlap=cfg.lookupOrDefault<label>("nkASMOverlap",1);opts.fill=cfg.lookupOrDefault<label>("nkILUFill",2);opts.lag=cfg.lookupOrDefault<label>("nkJacobianLag",20);opts.rtol=cfg.lookupOrDefault<scalar>("nkLinearTol",.3);opts.ew=cfg.lookupOrDefault<bool>("nkUseEW",true);
     opts.stagnationTol=cfg.lookupOrDefault<scalar>("nkLinearStagnationTol",.99);
+    word lineSearch=cfg.lookupOrDefault<word>("nkLineSearch","relaxedCubic");
+    // Former option value: adflowCubic. Use relaxedCubic.
+    if(lineSearch!="relaxedCubic" && lineSearch!="strictCubic")
+        FatalErrorInFunction<<"Unknown nkLineSearch "<<lineSearch<<exit(FatalError);
+    opts.relaxedCubic=lineSearch=="relaxedCubic";
+    opts.minStep=cfg.lookupOrDefault<scalar>("nkMinLineSearchStep",.01);
+    opts.turbulenceStart=5*nc;
     const dictionary scaling=daOptionPtr_->getAllOptions().subDict("normalizeStates");
     scalarList scales(4);wordList names(4);names[0]="U";names[1]="p";names[2]="T";names[3]="nuTilda";
     forAll(scales,i) {scales[i]=scaling.get<scalar>(names[i]);if(scales[i]<=0)FatalErrorInFunction<<"Invalid state scale"<<exit(FatalError);}
@@ -92,6 +99,7 @@ label DAHisaFoam::solveHybrid()
     auto persist=[&](const word&status){IOdictionary out(IOobject("hisaHybridState",time.timeName(),"uniform",meshPtr_(),IOobject::NO_READ,IOobject::NO_WRITE,false));out.add("initialResidual",initial);out.add("initialTotalResidual",initialTotal);out.add("initialCFL",initialCFL);out.add("ptcIteration",ptcCount);out.add("stateScales",scales);out.add("globalCells",returnReduce(nc,sumOp<label>()));out.add("outerIteration",iter);out.add("nkIteration",nkCount);out.add("stage",stage);out.add("recoverySteps",recovery);out.add("status",status);out.regIOobject::write();};
     Info<<"Hybrid initialResidual "<<initial<<" initialTotalResidual "<<initialTotal<<" cumulative iteration "<<iter<<" stage "<<stage<<endl;
     word status="maxIterations";hisaNK::Result linear;
+    word lastSolveStage("none");
     while(true){scalarList values=norms(r);
         hisaNK::Array scaled=r;
         for(label i=0;i<ns;++i) scaled[i]*=weights[i];
@@ -114,11 +122,25 @@ label DAHisaFoam::solveHybrid()
                         const scalarField& co=meshPtr_->lookupObject<volScalarField>("pseudoCoField").primitiveField();
                         Info<<" localCFL[min,max] "<<gMin(co)<<' '<<gMax(co);
                     }
-                } else Info<<" CFL n/a";
+                }
             }
-            if(show("ksp")) Info<<" KSP "<<linear.iterations;
-            if(show("linear")) Info<<" linRel "<<linear.linear;
-            if(show("alpha")) Info<<" alpha "<<linear.alpha;
+            if(stage=="NK" && lastSolveStage=="NK") {
+                if(show("ksp")) Info<<" KSP "<<linear.iterations;
+                if(show("linear")) Info<<" linRel "<<linear.linear;
+                if(show("alpha")) Info<<" alpha "<<linear.alpha
+                    <<" ls "<<(linear.minimumStep?"minimumStep":"sufficientDecrease")
+                    <<" prelimited "<<linear.prelimited;
+            }
+            if(stage=="PTC" && lastSolveStage=="PTC"
+                && meshPtr_->foundObject<IOdictionary>("hisaPTCGMRESPerformance")) {
+                const IOdictionary& perf=meshPtr_->lookupObject<IOdictionary>("hisaPTCGMRESPerformance");
+                if(perf.lookupOrDefault<label>("timeIndex",-1)==time.timeIndex()) {
+                    if(show("ksp")) Info<<" GMRES "<<perf.lookupOrDefault<label>("steps",0)
+                        <<" cycles "<<perf.lookupOrDefault<label>("cycles",0);
+                    if(show("linear")) Info<<" linRelMax "<<perf.lookupOrDefault<scalar>("relativeMax",0)
+                        <<" linearStop "<<perf.lookupOrDefault<word>("reason","unknown");
+                }
+            }
             Info<<endl;
         }
         if(converged){status="converged";break;}if(iter>=maxOuter){status="maxIterations";break;}bool running;{Quiet q(!detailed);running=time.run();}if(!running){status="endTime";break;}
@@ -126,6 +148,7 @@ label DAHisaFoam::solveHybrid()
         if(stage=="PTC"&&rel<=switchTol&&ptcCount>=ptcMin&&recovery>=recoveryMin){Info<<"Hybrid PTC -> NK: switch threshold reached"<<endl;stage="NK";nk->restart();}
         {Quiet q(!detailed);solver.preTimeIncrement();time++;}
         ++iter;
+        lastSolveStage=stage;
         if(stage=="NK"){
             ++nkCount;linear=nk->step(z);r=residual(z);
             if(linear.retries) Info<<"Hybrid NK PC rebuilt after linear stagnation: firstLinRel "<<linear.firstLinear<<" retryLinRel "<<linear.linear<<" totalKSP "<<linear.iterations<<endl;
